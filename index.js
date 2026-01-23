@@ -4,7 +4,8 @@ const {
     DisconnectReason,
     fetchLatestBaileysVersion,
     makeCacheableSignalKeyStore,
-    getContentType
+    getContentType,
+    delay
 } = require("@whiskeysockets/baileys");
 const pino = require("pino");
 const { Boom } = require("@hapi/boom");
@@ -28,15 +29,35 @@ async function startBot() {
             creds: state.creds,
             keys: makeCacheableSignalKeyStore(state.creds, pino({ level: "silent" })),
         },
-        browser: ["BLUEBOT-XMD", "Chrome", "1.0.0"],
+        // Using standard Chrome browser identity to ensure pairing notification works
+        browser: ["Ubuntu", "Chrome", "110.0.5481.177"],
     });
 
+    // Improved Pairing Code Logic
     if (!sock.authState.creds.registered) {
         console.log("\n--- BLUEBOT-XMD PAIRING SYSTEM ---");
-        const phoneNumber = await question("Enter number to pair (with country code, no +): ");
-        const code = await sock.requestPairingCode(phoneNumber.trim());
-        console.log(`\nYour Pairing Code: ${code}`);
-        console.log("Open WhatsApp > Linked Devices > Link with Phone Number Instead and enter the code.\n");
+        let phoneNumber = await question("Enter number to pair (with country code, no +): ");
+        phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+
+        if (!phoneNumber) {
+            console.log("❌ Invalid phone number. Please restart the bot.");
+            process.exit(1);
+        }
+
+        // Wait a bit before requesting the code to ensure socket is ready
+        await delay(3000);
+        
+        try {
+            const code = await sock.requestPairingCode(phoneNumber);
+            console.log(`\n✅ Your Pairing Code: ${code}`);
+            console.log("1. Open WhatsApp on your phone.");
+            console.log("2. Go to Linked Devices > Link a Device.");
+            console.log("3. Select 'Link with phone number instead'.");
+            console.log("4. Enter the code above.\n");
+        } catch (error) {
+            console.error("❌ Error requesting pairing code:", error.message);
+            console.log("Please try again in a few minutes.");
+        }
     }
 
     sock.ev.on("creds.update", saveCreds);
@@ -45,7 +66,10 @@ async function startBot() {
         const { connection, lastDisconnect } = update;
         if (connection === "close") {
             const shouldReconnect = (lastDisconnect.error instanceof Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
-            if (shouldReconnect) startBot();
+            if (shouldReconnect) {
+                console.log("Connection closed. Reconnecting...");
+                startBot();
+            }
         } else if (connection === "open") {
             console.log("\n--- BLUEBOT-XMD CONNECTED ---");
             console.log(`Bot Name: ${config.BOT_NAME}`);
