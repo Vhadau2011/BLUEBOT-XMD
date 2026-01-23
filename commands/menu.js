@@ -21,6 +21,7 @@ module.exports = {
 │ .runtime - Running time
 │ .help - Usage guide
 │ .update - Update bot from GitHub
+│ .mode - Switch public/private mode
 │
 ╰───────────────────╯
 ${config.FOOTER}`;

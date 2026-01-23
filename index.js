@@ -4,7 +4,7 @@ const {
     DisconnectReason,
     fetchLatestBaileysVersion,
     makeCacheableSignalKeyStore,
-    jidDecode
+    getContentType
 } = require("@whiskeysockets/baileys");
 const pino = require("pino");
 const { Boom } = require("@hapi/boom");
@@ -23,15 +23,14 @@ async function startBot() {
     const sock = makeWASocket({
         version,
         logger: pino({ level: "silent" }),
-        printQRInTerminal: false, // We use pairing code
+        printQRInTerminal: false,
         auth: {
             creds: state.creds,
             keys: makeCacheableSignalKeyStore(state.creds, pino({ level: "silent" })),
         },
-        browser: ["Ubuntu", "Chrome", "20.0.04"],
+        browser: ["BLUEBOT-XMD", "Chrome", "1.0.0"],
     });
 
-    // Pairing Code Logic
     if (!sock.authState.creds.registered) {
         console.log("\n--- BLUEBOT-XMD PAIRING SYSTEM ---");
         const phoneNumber = await question("Enter number to pair (with country code, no +): ");
@@ -46,13 +45,13 @@ async function startBot() {
         const { connection, lastDisconnect } = update;
         if (connection === "close") {
             const shouldReconnect = (lastDisconnect.error instanceof Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
-            console.log("Connection closed. Reconnecting...", shouldReconnect);
             if (shouldReconnect) startBot();
         } else if (connection === "open") {
             console.log("\n--- BLUEBOT-XMD CONNECTED ---");
             console.log(`Bot Name: ${config.BOT_NAME}`);
             console.log(`Owner: ${config.OWNER_NAME}`);
             console.log(`Prefix: ${config.PREFIX}`);
+            console.log(`Mode: ${config.MODE}`);
             console.log("Bot is now ready to use!\n");
         }
     });
@@ -63,29 +62,34 @@ async function startBot() {
             if (!mek.message) return;
             if (mek.key.fromMe) return;
 
-            const m = mek;
-            const from = m.key.remoteJid;
-            const type = Object.keys(m.message)[0];
-            const content = JSON.stringify(m.message);
-            const body = (type === 'conversation') ? m.message.conversation : (type === 'extendedTextMessage') ? m.message.extendedTextMessage.text : (type === 'imageMessage') ? m.message.imageMessage.caption : (type === 'videoMessage') ? m.message.videoMessage.caption : '';
+            const from = mek.key.remoteJid;
+            const type = getContentType(mek.message);
+            const body = (type === 'conversation') ? mek.message.conversation : 
+                         (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : 
+                         (type === 'imageMessage') ? mek.message.imageMessage.caption : 
+                         (type === 'videoMessage') ? mek.message.videoMessage.caption : '';
             
             if (!body.startsWith(config.PREFIX)) return;
 
             const args = body.slice(config.PREFIX.length).trim().split(/ +/);
             const command = args.shift().toLowerCase();
             const text = args.join(" ");
+            const sender = mek.key.participant || mek.key.remoteJid;
+            const isOwner = sender.includes(config.OWNER_NUMBER) || from.includes(config.OWNER_NUMBER);
 
-            // Simple Command Handler
+            // Mode Logic
+            if (config.MODE === 'private' && !isOwner) return;
+
+            // Command Handler
             const cmdPath = path.join(__dirname, 'commands', `${command}.js`);
             if (fs.existsSync(cmdPath)) {
                 const cmd = require(cmdPath);
-                await cmd.execute(sock, m, { args, text, from, config });
-            } else {
-                // Handle built-in or missing commands
+                console.log(`Executing command: ${command} from ${sender}`);
+                await cmd.execute(sock, mek, { args, text, from, config, isOwner });
             }
 
             // Auto Features
-            if (config.AUTO_READ) await sock.readMessages([m.key]);
+            if (config.AUTO_READ) await sock.readMessages([mek.key]);
             if (config.AUTO_TYPING) await sock.sendPresenceUpdate('composing', from);
             if (config.AUTO_RECORDING) await sock.sendPresenceUpdate('recording', from);
 
@@ -94,11 +98,9 @@ async function startBot() {
         }
     });
 
-    // Anti-Call
     sock.ev.on('call', async (call) => {
         if (config.ANTI_CALL) {
             await sock.rejectCall(call[0].id, call[0].from);
-            console.log(`Rejected call from: ${call[0].from}`);
         }
     });
 
