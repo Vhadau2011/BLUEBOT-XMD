@@ -5,7 +5,7 @@ const fs = require('fs');
 
 module.exports = {
     // 1. Owner Number (with country code, no +)
-    OWNER_NUMBER: '27686827802', 
+    OWNER_NUMBER: '27744332007', 
     
     // 2. Owner Name
     OWNER_NAME: 'mudau_t',
@@ -49,9 +49,15 @@ module.exports = {
     // 15. Session Name (Folder where session is stored)
     SESSION_ID: 'session',
     
+    MENU_IMAGE: 'https://files.catbox.moe/p9i3jp.jpg', 
+    
     // 16. Bot Version
     VERSION: '1.0.0',
+    
+    // MODS numbers (comma-separated, no spaces needed but allowed)
+MODS: "2349063377,23234154,234916427,2314709894",
     
     // 17. Footer Text
     FOOTER: '© 2026 BLUEBOT-XMD'
 };
+ 
