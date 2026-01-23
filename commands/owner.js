@@ -7,8 +7,8 @@ module.exports = [
         name: "add",
         description: "Add a number to bot's contact list (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender, args }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner, args }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -31,8 +31,8 @@ module.exports = [
         name: "ban",
         description: "Ban a user from using the bot (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -57,8 +57,8 @@ module.exports = [
         name: "unban",
         description: "Unban a user (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -85,8 +85,8 @@ module.exports = [
         name: "addmod",
         description: "Add a moderator (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -111,8 +111,8 @@ module.exports = [
         name: "delmod",
         description: "Remove a moderator (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -139,8 +139,8 @@ module.exports = [
         name: "update",
         description: "Update the bot from GitHub (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -166,8 +166,8 @@ module.exports = [
         name: "eval",
         description: "Execute JavaScript code (owner only)",
         category: "owner",
-        async execute(sock, m, { args, from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { args, from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -186,8 +186,8 @@ module.exports = [
         name: "exec",
         description: "Run shell commands (owner only)",
         category: "owner",
-        async execute(sock, m, { args, from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { args, from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -207,8 +207,8 @@ module.exports = [
         name: "restart",
         description: "Restart the bot (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -221,8 +221,8 @@ module.exports = [
         name: "shutdown",
         description: "Shutdown the bot (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -235,8 +235,8 @@ module.exports = [
         name: "block",
         description: "Block a user (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -261,8 +261,8 @@ module.exports = [
         name: "unblock",
         description: "Unblock a user (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
@@ -285,19 +285,17 @@ module.exports = [
 
     {
         name: "setprefix",
-        description: "Change the bot prefix (owner only)",
+        description: "Change bot prefix (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender, args }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { args, from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
             if (!args[0]) return sock.sendMessage(from, { text: "❌ Usage: .setprefix <new prefix>" }, { quoted: m });
 
-            const newPrefix = args[0];
-            config.PREFIX = newPrefix;
-
-            await sock.sendMessage(from, { text: `✅ Prefix changed to: ${newPrefix}` }, { quoted: m });
+            config.PREFIX = args[0];
+            await sock.sendMessage(from, { text: `✅ Prefix changed to: ${config.PREFIX}` }, { quoted: m });
         }
     },
 
@@ -305,39 +303,38 @@ module.exports = [
         name: "setmode",
         description: "Change bot mode (public/private) (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender, args }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { args, from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
-            if (!args[0]) return sock.sendMessage(from, { text: "❌ Usage: .setmode <public|private>" }, { quoted: m });
-
-            const mode = args[0].toLowerCase();
+            const mode = args[0]?.toLowerCase();
             if (mode !== "public" && mode !== "private") {
-                return sock.sendMessage(from, { text: "❌ Invalid mode. Use: public or private" }, { quoted: m });
+                return sock.sendMessage(from, { text: "❌ Usage: .setmode <public/private>" }, { quoted: m });
             }
 
             config.MODE = mode;
-            await sock.sendMessage(from, { text: `✅ Bot mode changed to: ${mode}` }, { quoted: m });
+            await sock.sendMessage(from, { text: `✅ Bot mode changed to: ${config.MODE}` }, { quoted: m });
         }
     },
 
     {
         name: "setbio",
-        description: "Change bot's bio/status (owner only)",
+        description: "Change bot bio (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender, text }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { args, from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
-            if (!text) return sock.sendMessage(from, { text: "❌ Usage: .setbio <new bio>" }, { quoted: m });
+            const bio = args.join(" ");
+            if (!bio) return sock.sendMessage(from, { text: "❌ Usage: .setbio <new bio>" }, { quoted: m });
 
             try {
-                await sock.updateProfileStatus(text);
-                await sock.sendMessage(from, { text: `✅ Bio updated to:\n${text}` }, { quoted: m });
+                await sock.updateProfileStatus(bio);
+                await sock.sendMessage(from, { text: "✅ Bot bio updated successfully." }, { quoted: m });
             } catch (err) {
-                console.error("Set bio error:", err);
+                console.error("Setbio error:", err);
                 sock.sendMessage(from, { text: "❌ Failed to update bio." }, { quoted: m });
             }
         }
@@ -345,21 +342,22 @@ module.exports = [
 
     {
         name: "setname",
-        description: "Change bot's name (owner only)",
+        description: "Change bot name (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender, text }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { args, from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
-            if (!text) return sock.sendMessage(from, { text: "❌ Usage: .setname <new name>" }, { quoted: m });
+            const name = args.join(" ");
+            if (!name) return sock.sendMessage(from, { text: "❌ Usage: .setname <new name>" }, { quoted: m });
 
             try {
-                await sock.updateProfileName(text);
-                config.BOT_NAME = text;
-                await sock.sendMessage(from, { text: `✅ Name updated to: ${text}` }, { quoted: m });
+                await sock.updateProfileName(name);
+                config.BOT_NAME = name;
+                await sock.sendMessage(from, { text: `✅ Bot name updated to: ${name}` }, { quoted: m });
             } catch (err) {
-                console.error("Set name error:", err);
+                console.error("Setname error:", err);
                 sock.sendMessage(from, { text: "❌ Failed to update name." }, { quoted: m });
             }
         }
@@ -367,24 +365,24 @@ module.exports = [
 
     {
         name: "setpp",
-        description: "Change bot's profile picture (owner only, reply to image)",
+        description: "Change bot profile picture (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
             const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quoted?.imageMessage) {
-                return sock.sendMessage(from, { text: "❌ Reply to an image to set as profile picture." }, { quoted: m });
+                return sock.sendMessage(from, { text: "❌ Reply to an image to set it as profile picture." }, { quoted: m });
             }
 
             try {
-                const media = await sock.downloadMediaMessage(m.message.extendedTextMessage.contextInfo.quotedMessage);
+                const media = await sock.downloadMediaMessage(quoted);
                 await sock.updateProfilePicture(sock.user.id, media);
-                await sock.sendMessage(from, { text: "✅ Profile picture updated!" }, { quoted: m });
+                await sock.sendMessage(from, { text: "✅ Profile picture updated successfully." }, { quoted: m });
             } catch (err) {
-                console.error("Set PP error:", err);
+                console.error("Setpp error:", err);
                 sock.sendMessage(from, { text: "❌ Failed to update profile picture." }, { quoted: m });
             }
         }
@@ -394,52 +392,62 @@ module.exports = [
         name: "broadcast",
         description: "Broadcast a message to all chats (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender, text }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { args, from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
+            const text = args.join(" ");
             if (!text) return sock.sendMessage(from, { text: "❌ Usage: .broadcast <message>" }, { quoted: m });
 
             const chats = await sock.groupFetchAllParticipating();
-            const groups = Object.keys(chats);
+            const groups = Object.values(chats).map(v => v.id);
 
-            let successCount = 0;
-            let failCount = 0;
+            await sock.sendMessage(from, { text: `📢 Broadcasting to ${groups.length} groups...` }, { quoted: m });
 
-            for (const groupId of groups) {
-                try {
-                    await sock.sendMessage(groupId, { text: `📢 *BROADCAST MESSAGE*\n\n${text}` });
-                    successCount++;
-                } catch (err) {
-                    failCount++;
-                }
+            for (const group of groups) {
+                await sock.sendMessage(group, { text: `📢 *BROADCAST*\n\n${text}\n\n_From Owner_` });
             }
 
-            await sock.sendMessage(from, { 
-                text: `✅ Broadcast complete!\n\nSuccess: ${successCount}\nFailed: ${failCount}` 
-            }, { quoted: m });
+            await sock.sendMessage(from, { text: "✅ Broadcast completed." }, { quoted: m });
+        }
+    },
+
+    {
+        name: "clearall",
+        description: "Clear all chats (owner only)",
+        category: "owner",
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
+                return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
+            }
+
+            try {
+                // This is a placeholder as clearing all chats is complex with Baileys
+                await sock.sendMessage(from, { text: "🧹 This feature is currently limited by WhatsApp API." }, { quoted: m });
+            } catch (err) {
+                console.error("Clearall error:", err);
+            }
         }
     },
 
     {
         name: "banlist",
-        description: "View all banned users (owner only)",
+        description: "Show list of banned users (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
             if (!global.bannedUsers || global.bannedUsers.length === 0) {
-                return sock.sendMessage(from, { text: "✅ No banned users." }, { quoted: m });
+                return sock.sendMessage(from, { text: "📋 No users are currently banned." }, { quoted: m });
             }
 
-            let list = `╭───『 BANNED USERS 』───\n`;
+            let list = "🚫 *Banned Users List:*\n\n";
             global.bannedUsers.forEach((user, i) => {
-                list += `│ ${i + 1}. @${user.split("@")[0]}\n`;
+                list += `${i + 1}. @${user.split("@")[0]}\n`;
             });
-            list += `╰────────────────────`;
 
             await sock.sendMessage(from, { text: list, mentions: global.bannedUsers }, { quoted: m });
         }
@@ -447,67 +455,42 @@ module.exports = [
 
     {
         name: "modlist",
-        description: "View all moderators (owner only)",
+        description: "Show list of moderators (owner only)",
         category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
+        async execute(sock, m, { from, isOwner }) {
+            if (!isOwner) {
                 return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
             }
 
             if (!global.moderators || global.moderators.length === 0) {
-                return sock.sendMessage(from, { text: "✅ No moderators added." }, { quoted: m });
+                return sock.sendMessage(from, { text: "📋 No moderators are currently added." }, { quoted: m });
             }
 
-            let list = `╭───『 MODERATORS 』───\n`;
-            global.moderators.forEach((mod, i) => {
-                list += `│ ${i + 1}. @${mod.split("@")[0]}\n`;
+            let list = "🛡️ *Moderators List:*\n\n";
+            global.moderators.forEach((user, i) => {
+                list += `${i + 1}. @${user.split("@")[0]}\n`;
             });
-            list += `╰────────────────────`;
 
             await sock.sendMessage(from, { text: list, mentions: global.moderators }, { quoted: m });
         }
     },
 
     {
-        name: "clearall",
-        description: "Clear all bot data (warnings, bans, mutes) (owner only)",
-        category: "owner",
-        async execute(sock, m, { from, sender }) {
-            if (!sender.includes(config.OWNER_NUMBER)) {
-                return sock.sendMessage(from, { text: "❌ Only the owner can use this command." }, { quoted: m });
-            }
-
-            global.bannedUsers = [];
-            global.moderators = [];
-            global.mutedUsers = {};
-            global.warnings = {};
-            global.antilink = {};
-            global.antispam = {};
-            global.antibadword = {};
-            global.antibot = {};
-            global.antinsfw = {};
-            global.antidelete = {};
-            global.welcomeEnabled = {};
-            global.goodbyeEnabled = {};
-
-            await sock.sendMessage(from, { text: "✅ All bot data cleared!" }, { quoted: m });
-        }
-    },
-
-    {
         name: "owner",
-        description: "Show owner contact information",
+        description: "Show owner information",
         category: "owner",
-        async execute(sock, m, { from, config }) {
+        async execute(sock, m, { from }) {
             const vcard = 'BEGIN:VCARD\n'
-                + 'VERSION:3.0\n' 
+                + 'VERSION:3.0\n'
                 + `FN:${config.OWNER_NAME}\n`
-                + `TEL;type=CELL;type=VOICE;waid=${config.OWNER_NUMBER}:${config.OWNER_NUMBER}\n`
+                + `ORG:${config.BOT_NAME};\n`
+                + `TEL;type=CELL;type=VOICE;waid=${config.OWNER_NUMBER}:+${config.OWNER_NUMBER}\n`
                 + 'END:VCARD';
-            await sock.sendMessage(from, { 
-                contacts: { 
-                    displayName: config.OWNER_NAME, 
-                    contacts: [{ vcard }] 
+
+            await sock.sendMessage(from, {
+                contacts: {
+                    displayName: config.OWNER_NAME,
+                    contacts: [{ vcard }]
                 }
             }, { quoted: m });
         }

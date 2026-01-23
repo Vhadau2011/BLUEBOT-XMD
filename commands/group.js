@@ -9,7 +9,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to kick members." }, { quoted: m });
@@ -91,7 +91,7 @@ module.exports = [
             if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command works only in groups." }, { quoted: m });
 
             const groupMeta = await sock.groupMetadata(from);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
             const botIsAdmin = groupMeta.participants.some(p => p.id === botId && p.admin);
 
             if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin to create an invite link." }, { quoted: m });
@@ -116,7 +116,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to promote members." }, { quoted: m });
@@ -146,7 +146,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to demote members." }, { quoted: m });
@@ -176,7 +176,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can close the group." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to close the group." }, { quoted: m });
@@ -200,7 +200,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can open the group." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to open the group." }, { quoted: m });
@@ -322,7 +322,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to change group name." }, { quoted: m });
@@ -348,7 +348,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to change group description." }, { quoted: m });
@@ -374,7 +374,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to revoke invite link." }, { quoted: m });
@@ -436,7 +436,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to add members." }, { quoted: m });
@@ -465,7 +465,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to delete messages." }, { quoted: m });
@@ -498,7 +498,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to kick members." }, { quoted: m });
@@ -627,7 +627,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to change group picture." }, { quoted: m });
@@ -655,7 +655,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to lock group settings." }, { quoted: m });
@@ -679,7 +679,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to unlock group settings." }, { quoted: m });
@@ -703,7 +703,7 @@ module.exports = [
 
             const groupMeta = await sock.groupMetadata(from);
             const admins = groupMeta.participants.filter(p => p.admin).map(p => p.id);
-            const botId = sock.user.id;
+            const botId = sock.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!admins.includes(sender)) return sock.sendMessage(from, { text: "❌ Only admins can use this command." }, { quoted: m });
             if (!admins.includes(botId)) return sock.sendMessage(from, { text: "❌ I must be admin to change disappearing messages." }, { quoted: m });
