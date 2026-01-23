@@ -3,7 +3,8 @@ const path = require("path");
 
 module.exports = {
     name: "menu",
-    description: "Show all commands dynamically in a fancy grid",
+    description: "Show all commands dynamically organized by category",
+    category: "general",
     async execute(sock, m, { from, config }) {
 
         // 🔹 BOT INFO HEADER
@@ -16,37 +17,62 @@ module.exports = {
 ╰────────────────────
 `;
 
-        // 🔹 COMMAND GRID HEADER
+        // 🔹 COLLECT ALL COMMANDS DYNAMICALLY
+        const commandsPath = path.join(__dirname);
+        const commandsByCategory = {};
+
+        const files = fs.readdirSync(commandsPath).filter(f => f.endsWith(".js") && f !== "menu.js");
+
+        for (const file of files) {
+            const filePath = path.join(commandsPath, file);
+            delete require.cache[require.resolve(filePath)];
+            const commands = require(filePath);
+            const commandArray = Array.isArray(commands) ? commands : [commands];
+
+            commandArray.forEach(cmd => {
+                const category = cmd.category || "other";
+                if (!commandsByCategory[category]) {
+                    commandsByCategory[category] = [];
+                }
+                commandsByCategory[category].push(cmd.name);
+            });
+        }
+
+        // 🔹 DISPLAY COMMANDS BY CATEGORY
         menuText += `
 ╭───『 *COMMAND MENU* 』───
 │
 `;
 
-        // 🔹 COLLECT ALL COMMANDS DYNAMICALLY
-        const commandsPath = path.join(__dirname, "..");
-        const commandList = [];
+        const categoryEmojis = {
+            "group": "👥",
+            "owner": "👑",
+            "support": "🆘",
+            "general": "🎮",
+            "fun": "🎉",
+            "utility": "🔧",
+            "media": "📱"
+        };
 
-        const items = fs.readdirSync(commandsPath);
+        const categoryOrder = ["group", "owner", "support", "general", "fun", "utility", "media"];
 
-        for (const item of items) {
-            const itemPath = path.join(commandsPath, item);
-
-            if (fs.statSync(itemPath).isDirectory()) {
-                const files = fs.readdirSync(itemPath).filter(f => f.endsWith(".js"));
-                for (const f of files) {
-                    if (f === "menu.js") continue;
-                    commandList.push(f.replace(".js", ""));
-                }
-            } else if (item.endsWith(".js") && item !== "menu.js") {
-                commandList.push(item.replace(".js", ""));
+        for (const category of categoryOrder) {
+            if (commandsByCategory[category]) {
+                const emoji = categoryEmojis[category] || "📌";
+                const categoryName = category.toUpperCase();
+                menuText += `│ ${emoji} *${categoryName}* (${commandsByCategory[category].length})\n`;
+                menuText += `│ ${commandsByCategory[category].join(", ")}\n│\n`;
             }
         }
 
-        // 🔹 FORMAT COMMANDS IN 2 COLUMNS
-        for (let i = 0; i < commandList.length; i += 2) {
-            const left = commandList[i];
-            const right = commandList[i + 1] || "";
-            menuText += `│ • ${left.padEnd(10)} • ${right.padEnd(10)}\n`;
+        // Add any remaining categories not in the order
+        for (const category in commandsByCategory) {
+            if (!categoryOrder.includes(category)) {
+                const emoji = categoryEmojis[category] || "📌";
+                const categoryName = category.toUpperCase();
+                menuText += `│ ${emoji} *${categoryName}* (${commandsByCategory[category].length})\n`;
+                menuText += `│ ${commandsByCategory[category].join(", ")}\n│\n`;
+            }
         }
 
         menuText += `╰────────────────────
@@ -55,7 +81,7 @@ module.exports = {
         // 🔹 FOOTER
         menuText += `
 🔹 *Usage* : ${config.PREFIX}[command]
-🔹 *Example* : ${config.PREFIX}menu
+🔹 *Example* : ${config.PREFIX}ping
 
 📌 *Developers* :
 *${config.OWNER_NAME}*
