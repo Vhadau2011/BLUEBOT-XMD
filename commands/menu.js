@@ -20,6 +20,7 @@ module.exports = {
 │ .info - Bot info
 │ .runtime - Running time
 │ .help - Usage guide
+│ .update - Update bot from GitHub
 │
 ╰───────────────────╯
 ${config.FOOTER}`;
