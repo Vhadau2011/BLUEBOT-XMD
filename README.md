@@ -1,20 +1,23 @@
 # BLUEBOT-XMD 🚀
 
-A simple, stable, and beginner-friendly WhatsApp Multi-Device bot built with Node.js and Baileys.
+A powerful, stable, and highly organized WhatsApp Multi-Device bot built with Node.js and Baileys. Now featuring a completely reorganized command structure for better performance and ease of use.
 
 ## 🌟 Features
+
+- **Organized Command System**: 180+ commands categorized into 7 dedicated files.
+- **Fancy Menu**: Dynamic menu with category-wise organization and "Read More" feature.
 - **Automatic Session Generation**: No need for manual session files.
 - **Pairing Code System**: Link your bot easily using a pairing code.
-- **Modular Commands**: Easy to add and modify commands.
 - **Highly Configurable**: 15+ settings in `config.js`.
 - **Anti-Call**: Automatically rejects incoming calls.
 - **Auto-Read/Typing**: Customizable bot presence.
+- **Moderation Tools**: Advanced group management and protection features.
 
 ## 🛠 Installation
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/mudau_t/BLUEBOT-XMD.git
+git clone https://github.com/Vhadau2011/BLUEBOT-XMD.git
 cd BLUEBOT-XMD
 ```
 
@@ -38,21 +41,34 @@ When prompted in the console:
 3. Open WhatsApp > Linked Devices > Link with Phone Number Instead.
 4. Enter the code.
 
-## 📜 Commands
-- `.ping` – Check bot speed
-- `.menu` – Show all commands
-- `.alive` – Bot status
-- `.owner` – Show owner info
-- `.uptime` – Bot uptime
-- `.echo <text>` – Repeat text
-- `.sticker` – Convert image to sticker
-- `.info` – Bot info
-- `.runtime` – How long the bot has been running
-- `.help` – Basic usage guide
+## 📜 Command Categories
+
+The bot features over **180 commands** organized into the following categories:
+
+| Category | Description |
+|----------|-------------|
+| 👥 **Group** | Advanced group management, moderation, and protection. |
+| 👑 **Owner** | Administrative commands restricted to the bot owner. |
+| 🆘 **Support** | Help, documentation, and support access. |
+| 🎮 **General** | Social, status, and general utility commands. |
+| 🎉 **Fun** | Games, jokes, and entertainment features. |
+| 🔧 **Utility** | Converters, search tools, and useful utilities. |
+| 📱 **Media** | Downloaders and media processing tools. |
+
+## 🚀 Quick Start Commands
+
+- `.menu` – Show all commands (organized by category)
+- `.ping` – Check bot speed and latency
+- `.alive` – Check if the bot is online
+- `.owner` – Show developer information
+- `.support` – Get help and join support groups
 
 ## 👨‍💻 Developer
-- **Name:** mudau_t
+
+- **Name:** Vhadau2011
 - **Bot Name:** BLUEBOT-XMD
+- **GitHub:** [Vhadau2011](https://github.com/Vhadau2011)
 
 ## 📄 License
+
 This project is licensed under the ISC License.
