@@ -81,7 +81,7 @@ async function startBot() {
             if (!body.startsWith(config.PREFIX)) return;
 
             const args = body.slice(config.PREFIX.length).trim().split(/ +/);
-            const command = args.shift().toLowerCase();
+            const cmdName = args.shift().toLowerCase();
             const text = args.join(" ");
 
             const sender = m.key.participant || from;
@@ -91,44 +91,54 @@ async function startBot() {
 
             if (config.MODE === "private" && !isOwner) return;
 
-            console.log(`CMD: ${command} FROM: ${sender}`);
+            console.log(`CMD: ${cmdName} FROM: ${sender}`);
 
             const commandsPath = path.join(__dirname, "commands");
             let executed = false;
 
-            // ✅ 1. CHECK ROOT commands/*.js
-            const rootCmd = path.join(commandsPath, `${command}.js`);
-            if (fs.existsSync(rootCmd)) {
-                delete require.cache[require.resolve(rootCmd)];
-                const cmd = require(rootCmd);
-                await cmd.execute(sock, m, { args, text, from, sender, isOwner, config });
+            const loadCommandsFromFile = (filePath) => {
+                delete require.cache[require.resolve(filePath)];
+                const exported = require(filePath);
+                return Array.isArray(exported) ? exported : [exported];
+            };
+
+            // 🔹 LOAD ALL COMMANDS
+            const allCommands = [];
+
+            const loadFolderCommands = (dir) => {
+                const items = fs.readdirSync(dir);
+                for (const item of items) {
+                    const itemPath = path.join(dir, item);
+                    if (fs.statSync(itemPath).isDirectory()) {
+                        loadFolderCommands(itemPath);
+                    } else if (item.endsWith(".js")) {
+                        const cmds = loadCommandsFromFile(itemPath);
+                        cmds.forEach(cmd => {
+                            // Assign category as folder name if not set
+                            if (!cmd.category) {
+                                const relative = path.relative(commandsPath, itemPath);
+                                cmd.category = relative.split(path.sep)[0];
+                            }
+                            allCommands.push(cmd);
+                        });
+                    }
+                }
+            };
+
+            loadFolderCommands(commandsPath);
+
+            // 🔹 EXECUTE COMMAND
+            const command = allCommands.find(c => c.name.toLowerCase() === cmdName);
+            if (command) {
+                await command.execute(sock, m, { args, text, from, sender, isOwner, config });
                 executed = true;
             }
 
-            // ✅ 2. CHECK SUBFOLDERS commands/*/*.js
-            if (!executed) {
-                const folders = fs.readdirSync(commandsPath);
-                for (const folder of folders) {
-                    const folderPath = path.join(commandsPath, folder);
-                    if (!fs.statSync(folderPath).isDirectory()) continue;
-
-                    const cmdFile = path.join(folderPath, `${command}.js`);
-                    if (fs.existsSync(cmdFile)) {
-                        delete require.cache[require.resolve(cmdFile)];
-                        const cmd = require(cmdFile);
-                        await cmd.execute(sock, m, { args, text, from, sender, isOwner, config });
-                        executed = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!executed) {
-                console.log(`❌ Command not found: ${command}`);
-            }
+            if (!executed) console.log(`❌ Command not found: ${cmdName}`);
 
             if (config.AUTO_READ) await sock.readMessages([m.key]);
             if (config.AUTO_TYPING) await sock.sendPresenceUpdate("composing", from);
+            if (config.AUTO_RECORDING) await sock.sendPresenceUpdate("recording", from);
 
         } catch (err) {
             console.error("MESSAGE ERROR:", err);
