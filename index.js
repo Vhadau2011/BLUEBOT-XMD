@@ -89,14 +89,23 @@ async function startBot() {
             const cmdName = args.shift().toLowerCase();
             const text = args.join(" ");
 
-            const sender = m.key.participant || from;
-            const isOwner =
-                sender.includes(config.OWNER_NUMBER) ||
-                from.includes(config.OWNER_NUMBER);
+            // 🔹 ROBUST SENDER IDENTIFICATION
+            const sender = m.key.participant || m.key.remoteJid;
+            const senderNumber = sender.split("@")[0].split(":")[0];
+            const ownerNumber = config.OWNER_NUMBER.replace(/[^0-9]/g, "");
+            
+            const isOwner = senderNumber === ownerNumber;
+
+            // 🔹 DEBUG LOGGING (Helpful for troubleshooting)
+            console.log(`\n--- DEBUG INFO ---`);
+            console.log(`Command: ${cmdName}`);
+            console.log(`Sender JID: ${sender}`);
+            console.log(`Sender Number: ${senderNumber}`);
+            console.log(`Owner Number: ${ownerNumber}`);
+            console.log(`Is Owner: ${isOwner}`);
+            console.log(`------------------\n`);
 
             if (config.MODE === "private" && !isOwner) return;
-
-            console.log(`CMD: ${cmdName} FROM: ${sender}`);
 
             const commandsPath = path.join(__dirname, "commands");
             let executed = false;
@@ -119,7 +128,6 @@ async function startBot() {
                     } else if (item.endsWith(".js")) {
                         const cmds = loadCommandsFromFile(itemPath);
                         cmds.forEach(cmd => {
-                            // Assign category as folder name if not set
                             if (!cmd.category) {
                                 const relative = path.relative(commandsPath, itemPath);
                                 cmd.category = relative.split(path.sep)[0];
