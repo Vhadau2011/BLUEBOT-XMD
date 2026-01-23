@@ -7,6 +7,9 @@ module.exports = {
     category: "general",
     async execute(sock, m, { from, config }) {
 
+        // 🔹 READ MORE SEPARATOR
+        const readMore = String.fromCharCode(8206).repeat(4001);
+
         // 🔹 BOT INFO HEADER
         let menuText = `
 ╭───『 ${config.BOT_NAME} 』───
@@ -15,6 +18,7 @@ module.exports = {
 │ 👑 *Creator* : ${config.OWNER_NAME}
 │ 🌐 *Mode* : ${config.MODE}
 ╰────────────────────
+${readMore}
 `;
 
         // 🔹 COLLECT ALL COMMANDS DYNAMICALLY
