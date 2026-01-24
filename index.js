@@ -49,6 +49,44 @@ async function startBot() {
 
     sock.ev.on("creds.update", saveCreds);
 
+    // Global settings persistence
+    if (!global.groupSettings) global.groupSettings = {};
+
+    // Participants update handler (Welcome & Antibot)
+    sock.ev.on("group-participants.update", async (anu) => {
+        try {
+            const { id, participants, action } = anu;
+            const metadata = await sock.groupMetadata(id);
+            const settings = global.groupSettings[id] || {};
+
+            if (action === "add") {
+                for (const num of participants) {
+                    // Antibot logic
+                    if (settings.antibot && (num.includes(":") || num.length > 20)) { // Simple bot detection
+                        await sock.groupParticipantsUpdate(id, [num], "remove");
+                        continue;
+                    }
+
+                    // Welcome message logic
+                    if (settings.welcome) {
+                        let msg = settings.welcome
+                            .replace(/@user/g, `@${num.split("@")[0]}`)
+                            .replace(/@gname/g, metadata.subject)
+                            .replace(/@count/g, metadata.participants.length)
+                            .replace(/@desc/g, metadata.desc?.toString() || "No description");
+
+                        await sock.sendMessage(id, { 
+                            text: msg, 
+                            mentions: [num] 
+                        });
+                    }
+                }
+            }
+        } catch (err) {
+            console.error("Group Update Error:", err);
+        }
+    });
+
     // Connection update
     sock.ev.on("connection.update", ({ connection, lastDisconnect }) => {
         if (connection === "close") {
@@ -137,6 +175,36 @@ async function startBot() {
             loadFolderCommands(commandsPath);
 
             // Find and execute command
+            // Antilink logic
+            const settings = global.groupSettings[from] || {};
+            if (from.endsWith("@g.us") && settings.antilink && settings.antilink !== "off") {
+                const containsLink = /(https?:\/\/[^\s]+)/g.test(body);
+                const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
+                
+                if (containsLink && !senderIsAdmin && !isMod) {
+                    // Delete message
+                    await sock.sendMessage(from, { delete: m.key });
+
+                    if (settings.antilink === "kick") {
+                        await sock.groupParticipantsUpdate(from, [sender], "remove");
+                        await sock.sendMessage(from, { text: `❌ @${senderNumber} removed for sending links.`, mentions: [sender] });
+                    } else if (settings.antilink === "warn") {
+                        if (!global.groupSettings[from].warnings) global.groupSettings[from].warnings = {};
+                        const warns = (global.groupSettings[from].warnings[sender] || 0) + 1;
+                        global.groupSettings[from].warnings[sender] = warns;
+
+                        if (warns >= 3) {
+                            await sock.groupParticipantsUpdate(from, [sender], "remove");
+                            await sock.sendMessage(from, { text: `❌ @${senderNumber} removed after 3 warnings for sending links.`, mentions: [sender] });
+                            delete global.groupSettings[from].warnings[sender];
+                        } else {
+                            await sock.sendMessage(from, { text: `⚠️ @${senderNumber}, links are not allowed! Warning ${warns}/3`, mentions: [sender] });
+                        }
+                    }
+                    return; // Stop processing if link detected and handled
+                }
+            }
+
             const command = allCommands.find(c => c.name.toLowerCase() === cmdName);
             if (command) {
                 await command.execute(sock, m, { args, text, from, sender, isOwner, isMod, config });
