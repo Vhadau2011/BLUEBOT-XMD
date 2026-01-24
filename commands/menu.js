@@ -7,6 +7,9 @@ module.exports = {
     category: "general",
 
     async execute(sock, m, { from, config }) {
+        // ← THIS IS THE KEY: define readMore
+        const readMore = '\u200B'.repeat(4001); // WhatsApp hides everything after this until "Read More"
+
         const commandsDir = path.join(__dirname);
         const categories = {};
 
