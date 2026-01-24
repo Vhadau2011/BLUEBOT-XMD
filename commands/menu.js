@@ -43,13 +43,13 @@ module.exports = {
 │ 👑 *Owner* : ${config.OWNER_NAME}
 │ 🌐 *Mode* : ${config.MODE}
 ╰────────────────────
-`;
+${readMore}`;
 
         // ── COMMAND MENU ──
         text += `\n╭───『 *COMMAND MENU* 』───\n│\n`;
 
         for (const [cat, cmds] of Object.entries(categories)) {
-            text += `│ 📌 *${cat}* (${cmds.length})\n`;
+            text += `╭・📌 *${cat}* (${cmds.length})\n`;
             text += `┃・\n`;
             cmds.forEach(cmd => {
                 text += ` ${cmd}\n┃・`;
