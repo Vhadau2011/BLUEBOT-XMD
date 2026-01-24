@@ -518,3 +518,27 @@ module.exports = [
         }
     }
 ];
+
+module.exports = {
+    name: "ownerinfo",
+    description: "Shows the owner and co-owner info",
+    category: "owner",
+    async execute(sock, m, { from, config }) {
+
+        const ownerText = `
+╭──❖ *OWNER INFO* ❖──
+│
+│ *Owner* : +27 74 433 2007
+│ *Co-owner* : +234 814 702 9894
+│ *Developer* : Mudau_t
+│ *Project* : ❖ Re:Zero | Nexus ❖
+│
+│ Use *.mods* fore are support team
+│ Use *.support* fore are support info
+│ Use *.botinfo* fore are bot info
+╰────────────────────
+`;
+
+        await sock.sendMessage(from, { text: ownerText }, { quoted: m });
+    }
+};
