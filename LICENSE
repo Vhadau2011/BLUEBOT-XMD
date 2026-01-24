@@ -1,35 +1,124 @@
-MIT License
+# BLUEBOT-XMD OFFICIAL SOFTWARE LICENSE AND TERMS OF SERVICE
 
-Copyright (c) 2026 Vhadau2011
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+**Version 2.0 - January 2026**
+**Copyright (c) 2026 Vhadau2011**
 
 ---
 
-### Additional Terms and Conditions
+## 1. PREAMBLE AND ACCEPTANCE OF TERMS
 
-1. **Usage Responsibility**: The user of this software (BLUEBOT-XMD) is solely responsible for any actions taken using the bot. The developers are not responsible for any account bans, data loss, or legal issues arising from the use of this software.
+This Software License and Terms of Service ("Agreement") is a legal agreement between you (either an individual or a single entity, hereinafter "User") and Vhadau2011 ("Developer") for the software product BLUEBOT-XMD, which includes computer code, associated media, printed materials, and "online" or electronic documentation (collectively, the "Software").
 
-2. **Modification and Distribution**: You are free to modify and distribute this software, provided that you include the original copyright notice and this license in all copies or substantial portions of the software.
+BY DOWNLOADING, INSTALLING, COPYING, OR OTHERWISE USING THE SOFTWARE, YOU AGREE TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THE TERMS OF THIS AGREEMENT, DO NOT INSTALL OR USE THE SOFTWARE.
 
-3. **Non-Commercial Use**: While the MIT license allows commercial use, we encourage users to keep this project open-source and free for the community.
+---
 
-4. **Privacy**: This bot does not collect or store personal data by default. However, users should be aware that any data processed by the bot (messages, media, etc.) is subject to WhatsApp's terms of service and privacy policy.
+## 2. GRANT OF LICENSE
 
-5. **No Warranty**: This software is provided "as is" without any warranty of any kind, either express or implied. The developers do not guarantee that the software will be error-free or uninterrupted.
+The Developer hereby grants the User a non-exclusive, worldwide, royalty-free license to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, subject to the following conditions:
+
+### 2.1 Attribution Requirement
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. You must provide clear credit to the original Developer (Vhadau2011) in any derivative works.
+
+### 2.2 Integrity of the Software
+Users are encouraged to maintain the core functionality of the Software. While modification is permitted, the User assumes all risks associated with such modifications.
+
+---
+
+## 3. USER RESPONSIBILITIES AND CONDUCT
+
+### 3.1 Legal Compliance
+The User agrees to use the Software only for purposes that are permitted by (a) this Agreement and (b) any applicable law, regulation, or generally accepted practices or guidelines in the relevant jurisdictions (including any laws regarding the export of data or software to and from the United States or other relevant countries).
+
+### 3.2 Prohibited Actions
+The User shall not use the Software to:
+- Engage in any activity that interferes with or disrupts the services provided by WhatsApp or any third-party platform.
+- Send unsolicited or unauthorized advertising, promotional materials, "junk mail," "spam," "chain letters," "pyramid schemes," or any other form of solicitation.
+- Harass, abuse, threaten, or incite violence against any individual or group.
+- Distribute viruses, worms, defects, Trojan horses, corrupted files, hoaxes, or any other items of a destructive or deceptive nature.
+
+---
+
+## 4. INTELLECTUAL PROPERTY RIGHTS
+
+### 4.1 Ownership
+The Developer retains all right, title, and interest in and to the Software, including all intellectual property rights therein. This Agreement does not grant the User any ownership interest in the Software.
+
+### 4.2 Feedback
+If the User provides any suggestions, comments, or other feedback to the Developer regarding the Software ("Feedback"), the Developer may use such Feedback for any purpose without obligation of any kind to the User.
+
+---
+
+## 5. PRIVACY AND DATA PROTECTION
+
+### 5.1 Data Processing
+The Software operates as a local automation tool. The Developer does not collect, store, or transmit any personal data from the User's device to external servers owned by the Developer. All message processing occurs locally on the User's environment.
+
+### 5.2 Third-Party Services
+The User acknowledges that the Software interacts with WhatsApp, a third-party service. The User's use of WhatsApp is governed by WhatsApp's own Terms of Service and Privacy Policy. The Developer is not responsible for any data breaches or privacy issues arising from the User's interaction with third-party services.
+
+---
+
+## 6. DISCLAIMER OF WARRANTIES
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+
+THE DEVELOPER DOES NOT WARRANT THAT:
+- THE SOFTWARE WILL MEET THE USER'S REQUIREMENTS.
+- THE SOFTWARE WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE.
+- THE RESULTS THAT MAY BE OBTAINED FROM THE USE OF THE SOFTWARE WILL BE ACCURATE OR RELIABLE.
+
+---
+
+## 7. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE DEVELOPER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+THIS INCLUDES, BUT IS NOT LIMITED TO:
+- LOSS OF DATA OR PROFITS.
+- ACCOUNT BANS OR SUSPENSIONS BY WHATSAPP OR OTHER PLATFORMS.
+- HARDWARE DAMAGE OR SYSTEM FAILURES.
+- ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES.
+
+---
+
+## 8. INDEMNIFICATION
+
+The User agrees to hold harmless and indemnify the Developer and its affiliates, officers, agents, and employees from and against any third-party claim arising from or in any way related to the User's use of the Software, including any liability or expense arising from all claims, losses, damages (actual and consequential), suits, judgments, litigation costs, and attorneys' fees, of every kind and nature.
+
+---
+
+## 9. TERMINATION
+
+This License is effective until terminated. The User's rights under this License will terminate automatically without notice from the Developer if the User fails to comply with any term(s) of this License. Upon termination of the License, the User shall cease all use of the Software and destroy all copies, full or partial, of the Software.
+
+---
+
+## 10. GOVERNING LAW
+
+This Agreement shall be governed by and construed in accordance with the laws of the jurisdiction in which the Developer resides, without regard to its conflict of laws principles.
+
+---
+
+## 11. SEVERABILITY
+
+If any provision of this Agreement is held to be invalid or unenforceable, such provision shall be struck and the remaining provisions shall be enforced to the fullest extent under law.
+
+---
+
+## 12. ENTIRE AGREEMENT
+
+This Agreement constitutes the entire agreement between the User and the Developer regarding the Software and supersedes all prior or contemporaneous oral or written communications, proposals, and representations with respect to the Software or any other subject matter covered by this Agreement.
+
+---
+
+## 13. CONTACT INFORMATION
+
+For any questions regarding this License or the Software, please contact the Developer through the official support channels:
+- **WhatsApp Community**: https://chat.whatsapp.com/GsjslOuJbLBBQZfsqa6M7w
+- **Discord Server**: https://discord.gg/wBCExgWR
+- **GitHub**: https://github.com/Vhadau2011
+
+---
+
+**BY CONTINUING TO USE BLUEBOT-XMD, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS ENTIRE AGREEMENT, UNDERSTAND IT, AND AGREE TO BE BOUND BY ITS TERMS AND CONDITIONS.**
