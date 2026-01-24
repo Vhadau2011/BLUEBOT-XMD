@@ -61,7 +61,6 @@ async function startBot() {
             console.log(`Mode     : ${config.MODE}`);
             console.log("-----------------------------\n");
 
-            // 🔹 SEND CONNECTED MESSAGE TO OWNER
             const ownerJid = `${config.OWNER_NUMBER}@s.whatsapp.net`;
             sock.sendMessage(ownerJid, { 
                 text: `🚀 *BLUEBOT-XMD bot connected*\n\nHave fun! ✨\n\n_System Status: Online_` 
@@ -69,7 +68,6 @@ async function startBot() {
         }
     });
 
-    // 📩 MESSAGE HANDLER
     sock.ev.on("messages.upsert", async ({ messages }) => {
         try {
             const m = messages[0];
@@ -94,29 +92,17 @@ async function startBot() {
             const senderNumber = sender.split("@")[0].split(":")[0];
             const ownerNumber = config.OWNER_NUMBER.replace(/[^0-9]/g, "");
             
+            // 🔹 MODS IDENTIFICATION
+            const modsList = (config.MODS || "").split(",").map(num => num.replace(/[^0-9]/g, "").trim()).filter(num => num);
+            
             const isOwner = senderNumber === ownerNumber;
+            const isMod = isOwner || modsList.includes(senderNumber);
 
-            // 🔹 DEBUG LOGGING (Helpful for troubleshooting)
-            console.log(`\n--- DEBUG INFO ---`);
-            console.log(`Command: ${cmdName}`);
-            console.log(`Sender JID: ${sender}`);
-            console.log(`Sender Number: ${senderNumber}`);
-            console.log(`Owner Number: ${ownerNumber}`);
-            console.log(`Is Owner: ${isOwner}`);
-            console.log(`------------------\n`);
+            console.log(`[CMD] ${cmdName} | From: ${senderNumber} | Owner: ${isOwner} | Mod: ${isMod}`);
 
             if (config.MODE === "private" && !isOwner) return;
 
             const commandsPath = path.join(__dirname, "commands");
-            let executed = false;
-
-            const loadCommandsFromFile = (filePath) => {
-                delete require.cache[require.resolve(filePath)];
-                const exported = require(filePath);
-                return Array.isArray(exported) ? exported : [exported];
-            };
-
-            // 🔹 LOAD ALL COMMANDS
             const allCommands = [];
 
             const loadFolderCommands = (dir) => {
@@ -126,11 +112,13 @@ async function startBot() {
                     if (fs.statSync(itemPath).isDirectory()) {
                         loadFolderCommands(itemPath);
                     } else if (item.endsWith(".js")) {
-                        const cmds = loadCommandsFromFile(itemPath);
+                        delete require.cache[require.resolve(itemPath)];
+                        const exported = require(itemPath);
+                        const cmds = Array.isArray(exported) ? exported : [exported];
                         cmds.forEach(cmd => {
                             if (!cmd.category) {
                                 const relative = path.relative(commandsPath, itemPath);
-                                cmd.category = relative.split(path.sep)[0];
+                                cmd.category = relative.split(path.sep)[0] || "general";
                             }
                             allCommands.push(cmd);
                         });
@@ -140,19 +128,13 @@ async function startBot() {
 
             loadFolderCommands(commandsPath);
 
-            // 🔹 EXECUTE COMMAND
             const command = allCommands.find(c => c.name.toLowerCase() === cmdName);
             if (command) {
-                await command.execute(sock, m, { args, text, from, sender, isOwner, config });
-                executed = true;
+                // Pass isMod and isOwner to the command
+                await command.execute(sock, m, { args, text, from, sender, isOwner, isMod, config });
             }
 
-            if (!executed) console.log(`❌ Command not found: ${cmdName}`);
-
             if (config.AUTO_READ) await sock.readMessages([m.key]);
-            if (config.AUTO_TYPING) await sock.sendPresenceUpdate("composing", from);
-            if (config.AUTO_RECORDING) await sock.sendPresenceUpdate("recording", from);
-
         } catch (err) {
             console.error("MESSAGE ERROR:", err);
         }
