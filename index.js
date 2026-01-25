@@ -13,6 +13,7 @@ const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
 const config = require("./config");
+const storage = require("./src/core/internal/storage");
 
 try { require('./src/core/internal/system').init(); } catch (e) {}
 
@@ -52,34 +53,21 @@ async function startBot() {
     // Global settings persistence
     if (!global.groupSettings) global.groupSettings = {};
 
-    // Participants update handler (Welcome & Antibot)
+    // Participants update handler (Welcome)
     sock.ev.on("group-participants.update", async (anu) => {
         try {
             const { id, participants, action } = anu;
-            const metadata = await sock.groupMetadata(id);
-            const settings = global.groupSettings[id] || {};
+            const settings = storage.getGroup(id);
 
-            if (action === "add") {
+            if (action === "add" && settings.welcome === "on") {
+                const metadata = await sock.groupMetadata(id);
                 for (const num of participants) {
-                    // Antibot logic
-                    if (settings.antibot && (num.includes(":") || num.length > 20)) { // Simple bot detection
-                        await sock.groupParticipantsUpdate(id, [num], "remove");
-                        continue;
-                    }
+                    let msg = settings.welcomeMessage
+                        .replace(/{user}/g, `@${num.split("@")[0]}`)
+                        .replace(/{group}/g, metadata.subject)
+                        .replace(/{count}/g, metadata.participants.length);
 
-                    // Welcome message logic
-                    if (settings.welcome) {
-                        let msg = settings.welcome
-                            .replace(/@user/g, `@${num.split("@")[0]}`)
-                            .replace(/@gname/g, metadata.subject)
-                            .replace(/@count/g, metadata.participants.length)
-                            .replace(/@desc/g, metadata.desc?.toString() || "No description");
-
-                        await sock.sendMessage(id, { 
-                            text: msg, 
-                            mentions: [num] 
-                        });
-                    }
+                    await sock.sendMessage(id, { text: msg, mentions: [num] });
                 }
             }
         } catch (err) {
@@ -176,32 +164,35 @@ async function startBot() {
 
             // Find and execute command
             // Antilink logic
-            const settings = global.groupSettings[from] || {};
-            if (from.endsWith("@g.us") && settings.antilink && settings.antilink !== "off") {
-                const containsLink = /(https?:\/\/[^\s]+)/g.test(body);
-                const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-                
-                if (containsLink && !senderIsAdmin && !isMod) {
-                    // Delete message
-                    await sock.sendMessage(from, { delete: m.key });
+            const settings = storage.getGroup(from);
+            if (from.endsWith("@g.us") && settings.antilink !== "off") {
+                const isWaLink = body.includes("chat.whatsapp.com");
+                if (isWaLink) {
+                    const metadata = await sock.groupMetadata(from);
+                    const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
+                    
+                    if (!isAdmin) {
+                        await sock.sendMessage(from, { delete: m.key });
 
-                    if (settings.antilink === "kick") {
-                        await sock.groupParticipantsUpdate(from, [sender], "remove");
-                        await sock.sendMessage(from, { text: `❌ @${senderNumber} removed for sending links.`, mentions: [sender] });
-                    } else if (settings.antilink === "warn") {
-                        if (!global.groupSettings[from].warnings) global.groupSettings[from].warnings = {};
-                        const warns = (global.groupSettings[from].warnings[sender] || 0) + 1;
-                        global.groupSettings[from].warnings[sender] = warns;
-
-                        if (warns >= 3) {
+                        if (settings.antilink === "kick") {
                             await sock.groupParticipantsUpdate(from, [sender], "remove");
-                            await sock.sendMessage(from, { text: `❌ @${senderNumber} removed after 3 warnings for sending links.`, mentions: [sender] });
-                            delete global.groupSettings[from].warnings[sender];
-                        } else {
-                            await sock.sendMessage(from, { text: `⚠️ @${senderNumber}, links are not allowed! Warning ${warns}/3`, mentions: [sender] });
+                            await sock.sendMessage(from, { text: `❌ @${senderNumber} kicked for sending links.`, mentions: [sender] });
+                        } else if (settings.antilink === "warn") {
+                            const warns = (settings.warnings[sender] || 0) + 1;
+                            const limit = settings.warnLimit || 3;
+                            
+                            if (warns >= limit) {
+                                await sock.groupParticipantsUpdate(from, [sender], "remove");
+                                await sock.sendMessage(from, { text: `❌ @${senderNumber} kicked after ${limit} warnings.`, mentions: [sender] });
+                                settings.warnings[sender] = 0;
+                            } else {
+                                settings.warnings[sender] = warns;
+                                await sock.sendMessage(from, { text: `⚠️ @${senderNumber}, links are not allowed! Warning ${warns}/${limit}`, mentions: [sender] });
+                            }
+                            storage.updateGroup(from, { warnings: settings.warnings });
                         }
+                        return;
                     }
-                    return; // Stop processing if link detected and handled
                 }
             }
 

@@ -1,27 +1,44 @@
+const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
+const fs = require("fs");
+const path = require("path");
+const { exec } = require("child_process");
+
 module.exports = [
-    { name: "play", description: "Play music", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎵 Playing music..." }, { quoted: m }); } },
-    { name: "song", description: "Download song", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎵 Downloading song..." }, { quoted: m }); } },
-    { name: "video", description: "Download video", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎬 Downloading video..." }, { quoted: m }); } },
-    { name: "ytmp3", description: "YouTube to MP3", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎵 Converting YouTube to MP3..." }, { quoted: m }); } },
-    { name: "ytmp4", description: "YouTube to MP4", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎬 Converting YouTube to MP4..." }, { quoted: m }); } },
-    { name: "ytsearch", description: "YouTube search", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🔍 Searching YouTube..." }, { quoted: m }); } },
-    { name: "spotify", description: "Spotify search", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎵 Searching Spotify..." }, { quoted: m }); } },
-    { name: "soundcloud", description: "SoundCloud search", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎵 Searching SoundCloud..." }, { quoted: m }); } },
-    { name: "instagram", description: "Instagram download", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "📸 Downloading Instagram media..." }, { quoted: m }); } },
-    { name: "tiktok", description: "TikTok download", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎵 Downloading TikTok video..." }, { quoted: m }); } },
-    { name: "twitter", description: "Twitter download", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🐦 Downloading Twitter media..." }, { quoted: m }); } },
-    { name: "facebook", description: "Facebook download", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "📘 Downloading Facebook video..." }, { quoted: m }); } },
-    { name: "pinterest", description: "Pinterest search", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "📌 Searching Pinterest..." }, { quoted: m }); } },
-    { name: "wallpaper", description: "Get wallpaper", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🖼️ Getting wallpaper..." }, { quoted: m }); } },
-    { name: "gif", description: "GIF search", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎞️ Searching GIFs..." }, { quoted: m }); } },
-    { name: "emoji", description: "Emoji info", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "😀 Emoji info..." }, { quoted: m }); } },
-    { name: "mememaker", description: "Create meme", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "😂 Creating meme..." }, { quoted: m }); } },
-    { name: "blur", description: "Blur image", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🌫️ Blurring image..." }, { quoted: m }); } },
-    { name: "enhance", description: "Enhance image", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "✨ Enhancing image..." }, { quoted: m }); } },
-    { name: "removebg", description: "Remove background", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎨 Removing background..." }, { quoted: m }); } },
-    { name: "filter", description: "Apply filter", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🎨 Applying filter..." }, { quoted: m }); } },
-    { name: "resize", description: "Resize image", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "📏 Resizing image..." }, { quoted: m }); } },
-    { name: "crop", description: "Crop image", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "✂️ Cropping image..." }, { quoted: m }); } },
-    { name: "rotate", description: "Rotate image", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "🔄 Rotating image..." }, { quoted: m }); } },
-    { name: "flip", description: "Flip image", category: "media", async execute(sock, m, { from }) { await sock.sendMessage(from, { text: "↔️ Flipping image..." }, { quoted: m }); } }
+    {
+        name: "sticker",
+        description: "Convert image/video to sticker",
+        category: "media",
+        async execute(sock, m, { from }) {
+            const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage || m.message;
+            const mime = quoted?.imageMessage?.mimetype || quoted?.videoMessage?.mimetype || quoted?.viewOnceMessageV2?.message?.imageMessage?.mimetype || quoted?.viewOnceMessageV2?.message?.videoMessage?.mimetype;
+
+            if (!mime) return sock.sendMessage(from, { text: "❌ Reply to an image or video." }, { quoted: m });
+
+            const messageType = mime.split("/")[0];
+            const stream = await downloadContentFromMessage(quoted[messageType + "Message"] || quoted?.viewOnceMessageV2?.message?.[messageType + "Message"], messageType);
+            let buffer = Buffer.from([]);
+            for await (const chunk of stream) {
+                buffer = Buffer.concat([buffer, chunk]);
+            }
+
+            const inputPath = path.join(__dirname, `../temp_${Date.now()}.${mime.split("/")[1]}`);
+            const outputPath = path.join(__dirname, `../temp_${Date.now()}.webp`);
+            fs.writeFileSync(inputPath, buffer);
+
+            const ffmpegCmd = messageType === "image" 
+                ? `ffmpeg -i ${inputPath} -vcodec libwebp -filter:v "scale='if(gt(a,1),512,-1)':'if(gt(a,1),-1,512)',pad=512:512:(512-iw)/2:(512-ih)/2:color=white@0" -y ${outputPath}`
+                : `ffmpeg -i ${inputPath} -vcodec libwebp -filter:v "fps=15,scale='if(gt(a,1),512,-1)':'if(gt(a,1),-1,512)',pad=512:512:(512-iw)/2:(512-ih)/2:color=white@0" -loop 0 -preset default -an -vsync 0 -s 512:512 -y ${outputPath}`;
+
+            exec(ffmpegCmd, async (err) => {
+                if (err) {
+                    fs.unlinkSync(inputPath);
+                    return sock.sendMessage(from, { text: "❌ Failed to convert sticker." }, { quoted: m });
+                }
+                const stickerBuffer = fs.readFileSync(outputPath);
+                await sock.sendMessage(from, { sticker: stickerBuffer }, { quoted: m });
+                fs.unlinkSync(inputPath);
+                fs.unlinkSync(outputPath);
+            });
+        }
+    }
 ];

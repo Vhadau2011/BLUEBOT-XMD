@@ -1,214 +1,154 @@
-const helper = require("../src/core/internal/helper");
-
-// Initialize global settings if not exists
-if (!global.groupSettings) global.groupSettings = {};
+const storage = require("../src/core/internal/storage");
 
 module.exports = [
     {
-        name: "promote",
-        description: "Promote a member to admin",
-        category: "group",
-        async execute(sock, m, { from, sender, isMod }) {
-            if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
-            
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
-
-            const botIsAdmin = await helper.getBotAdmin(sock, from);
-            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin to promote members." }, { quoted: m });
-
-            const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
-            if (!target) return sock.sendMessage(from, { text: "❌ Tag or reply to a user to promote." }, { quoted: m });
-
-            try {
-                await sock.groupParticipantsUpdate(from, [target], "promote");
-                await sock.sendMessage(from, { text: `✅ Promoted @${target.split("@")[0]} to admin.`, mentions: [target] }, { quoted: m });
-            } catch (err) {
-                await sock.sendMessage(from, { text: `❌ Failed: ${err.message}` }, { quoted: m });
-            }
-        }
-    },
-    {
-        name: "demote",
-        description: "Demote an admin to member",
-        category: "group",
-        async execute(sock, m, { from, sender, isMod }) {
-            if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
-            
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
-
-            const botIsAdmin = await helper.getBotAdmin(sock, from);
-            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin to demote members." }, { quoted: m });
-
-            const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
-            if (!target) return sock.sendMessage(from, { text: "❌ Tag or reply to a user to demote." }, { quoted: m });
-
-            try {
-                await sock.groupParticipantsUpdate(from, [target], "demote");
-                await sock.sendMessage(from, { text: `✅ Demoted @${target.split("@")[0]} to member.`, mentions: [target] }, { quoted: m });
-            } catch (err) {
-                await sock.sendMessage(from, { text: `❌ Failed: ${err.message}` }, { quoted: m });
-            }
-        }
-    },
-    {
         name: "antilink",
-        description: "Set antilink mode (warn, kick, delete, off)",
+        description: "Configure antilink system",
         category: "group",
-        async execute(sock, m, { from, sender, text, isMod }) {
+        async execute(sock, m, { from, sender, args, isMod }) {
             if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
             
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
+            const metadata = await sock.groupMetadata(from);
+            const participants = metadata.participants;
+            const isAdmin = participants.find(p => p.id === sender)?.admin || isMod;
+            const botIsAdmin = participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
 
-            const modes = ["warn", "kick", "delete", "off"];
-            if (!modes.includes(text)) return sock.sendMessage(from, { text: "❌ Usage: .antilink warn/kick/delete/off" }, { quoted: m });
+            if (!isAdmin) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
+            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin to enforce antilink." }, { quoted: m });
 
-            if (!global.groupSettings[from]) global.groupSettings[from] = {};
-            global.groupSettings[from].antilink = text;
+            const mode = args[0]?.toLowerCase();
+            const settings = storage.getGroup(from);
 
-            await sock.sendMessage(from, { text: `✅ Antilink mode set to: *${text}*` }, { quoted: m });
-        }
-    },
-    {
-        name: "antibot",
-        description: "Enable/disable automatic bot removal",
-        category: "group",
-        async execute(sock, m, { from, sender, text, isMod }) {
-            if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
-            
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
-
-            if (text === "on") {
-                if (!global.groupSettings[from]) global.groupSettings[from] = {};
-                global.groupSettings[from].antibot = true;
-                await sock.sendMessage(from, { text: "✅ Antibot enabled. New bots will be removed automatically." }, { quoted: m });
-            } else if (text === "off") {
-                if (!global.groupSettings[from]) global.groupSettings[from] = {};
-                global.groupSettings[from].antibot = false;
-                await sock.sendMessage(from, { text: "✅ Antibot disabled." }, { quoted: m });
+            if (mode === "warn") {
+                const count = parseInt(args[1]) || 3;
+                storage.updateGroup(from, { antilink: "warn", warnLimit: count });
+                await sock.sendMessage(from, { text: `✅ Antilink set to *warn* with limit: ${count}` }, { quoted: m });
+            } else if (mode === "delete") {
+                storage.updateGroup(from, { antilink: "delete" });
+                await sock.sendMessage(from, { text: "✅ Antilink set to *delete* mode." }, { quoted: m });
+            } else if (mode === "kick") {
+                storage.updateGroup(from, { antilink: "kick" });
+                await sock.sendMessage(from, { text: "✅ Antilink set to *kick* mode." }, { quoted: m });
+            } else if (mode === "off") {
+                storage.updateGroup(from, { antilink: "off" });
+                await sock.sendMessage(from, { text: "✅ Antilink disabled." }, { quoted: m });
             } else {
-                await sock.sendMessage(from, { text: "❌ Usage: .antibot on/off" }, { quoted: m });
+                await sock.sendMessage(from, { text: "❌ Usage:\n.antilink warn <count>\n.antilink delete\n.antilink kick\n.antilink off" }, { quoted: m });
             }
         }
     },
     {
         name: "setwelcome",
-        description: "Set a custom welcome message",
+        description: "Configure welcome system",
         category: "group",
-        async execute(sock, m, { from, sender, text, isMod }) {
+        async execute(sock, m, { from, sender, text, args, isMod }) {
             if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
             
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
+            const metadata = await sock.groupMetadata(from);
+            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
+            if (!isAdmin) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
 
-            if (!text) return sock.sendMessage(from, { 
-                text: "❌ Provide a welcome message.\n\n*Placeholders:*\n@user - Mention user\n@gname - Group name\n@count - Member count\n@desc - Group description" 
-            }, { quoted: m });
-
-            if (!global.groupSettings[from]) global.groupSettings[from] = {};
-            global.groupSettings[from].welcome = text;
-
-            await sock.sendMessage(from, { text: `✅ Welcome message set successfully!` }, { quoted: m });
+            const mode = args[0]?.toLowerCase();
+            if (mode === "on") {
+                storage.updateGroup(from, { welcome: "on" });
+                await sock.sendMessage(from, { text: "✅ Welcome system enabled." }, { quoted: m });
+            } else if (mode === "off") {
+                storage.updateGroup(from, { welcome: "off" });
+                await sock.sendMessage(from, { text: "✅ Welcome system disabled." }, { quoted: m });
+            } else if (text) {
+                storage.updateGroup(from, { welcomeMessage: text });
+                await sock.sendMessage(from, { text: "✅ Welcome message updated!" }, { quoted: m });
+            } else {
+                await sock.sendMessage(from, { text: "❌ Usage:\n.setwelcome on/off\n.setwelcome <message>\n\nPlaceholders: {user}, {group}, {count}" }, { quoted: m });
+            }
         }
     },
     {
         name: "set",
-        description: "Guide on how to configure group settings",
+        description: "Show group settings usage",
         category: "group",
-        async execute(sock, m, { from, sender, isMod }) {
-            if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
-            
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
-
+        async execute(sock, m, { from }) {
             const guide = `
-╭・『 *GROUP CONFIGURATION* 』
+╭・『 *GROUP SETTINGS* 』
 ┃・
-┃・*Antilink:*
-┃・.antilink warn/kick/delete/off
+┃・*Antilink Modes:*
+┃・.antilink warn <count>
+┃・.antilink delete
+┃・.antilink kick
+┃・.antilink off
 ┃・
-┃・*Antibot:*
-┃・.antibot on/off
-┃・
-┃・*Welcome Message:*
+┃・*Welcome Setup:*
+┃・.setwelcome on/off
 ┃・.setwelcome <message>
 ┃・
 ┃・*Placeholders:*
-┃・@user, @gname, @count, @desc
+┃・{user}, {group}, {count}
 ┃・
-╰・_Use these commands to manage your group._
+╰・_Manage your group efficiently._
 `;
             await sock.sendMessage(from, { text: guide }, { quoted: m });
         }
     },
     {
         name: "kick",
-        description: "Remove a user from the group",
+        description: "Remove a member",
         category: "group",
         async execute(sock, m, { from, sender, isMod }) {
-            if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
-            
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
+            if (!from.endsWith("@g.us")) return;
+            const metadata = await sock.groupMetadata(from);
+            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
+            const botIsAdmin = metadata.participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
 
-            const botIsAdmin = await helper.getBotAdmin(sock, from);
-            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin to kick members." }, { quoted: m });
+            if (!isAdmin) return sock.sendMessage(from, { text: "❌ Only admins can kick." }, { quoted: m });
+            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I am not an admin." }, { quoted: m });
 
             const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
-            if (!target) return sock.sendMessage(from, { text: "❌ Tag or reply to a user to kick." }, { quoted: m });
+            if (!target) return sock.sendMessage(from, { text: "❌ Tag or reply to a user." }, { quoted: m });
+            if (target === metadata.owner) return sock.sendMessage(from, { text: "❌ Cannot kick group owner." }, { quoted: m });
 
-            try {
-                await sock.groupParticipantsUpdate(from, [target], "remove");
-                await sock.sendMessage(from, { text: `✅ Removed @${target.split("@")[0]}`, mentions: [target] }, { quoted: m });
-            } catch (err) {
-                await sock.sendMessage(from, { text: `❌ Failed: ${err.message}` }, { quoted: m });
-            }
+            await sock.groupParticipantsUpdate(from, [target], "remove");
+            await sock.sendMessage(from, { text: `✅ Removed @${target.split("@")[0]}`, mentions: [target] }, { quoted: m });
         }
     },
     {
-        name: "mute",
-        description: "Close group (admins only)",
+        name: "promote",
+        description: "Promote to admin",
         category: "group",
         async execute(sock, m, { from, sender, isMod }) {
             if (!from.endsWith("@g.us")) return;
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
-            const botIsAdmin = await helper.getBotAdmin(sock, from);
-            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin." }, { quoted: m });
-            await sock.groupSettingUpdate(from, "announcement");
-            await sock.sendMessage(from, { text: "✅ Group Muted" }, { quoted: m });
+            const metadata = await sock.groupMetadata(from);
+            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
+            const botIsAdmin = metadata.participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
+
+            if (!isAdmin) return;
+            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I am not an admin." }, { quoted: m });
+
+            const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
+            if (!target) return;
+
+            await sock.groupParticipantsUpdate(from, [target], "promote");
+            await sock.sendMessage(from, { text: `✅ Promoted @${target.split("@")[0]}`, mentions: [target] }, { quoted: m });
         }
     },
     {
-        name: "unmute",
-        description: "Open group (everyone can send messages)",
+        name: "demote",
+        description: "Demote from admin",
         category: "group",
         async execute(sock, m, { from, sender, isMod }) {
             if (!from.endsWith("@g.us")) return;
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
-            const botIsAdmin = await helper.getBotAdmin(sock, from);
-            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin." }, { quoted: m });
-            await sock.groupSettingUpdate(from, "not_announcement");
-            await sock.sendMessage(from, { text: "✅ Group Unmuted" }, { quoted: m });
-        }
-    },
-    {
-        name: "tagall",
-        description: "Tag all members",
-        category: "group",
-        async execute(sock, m, { from, sender, text, isMod }) {
-            if (!from.endsWith("@g.us")) return;
-            const senderIsAdmin = await helper.checkAdmin(sock, from, sender);
-            if (!senderIsAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
-            const groupMetadata = await sock.groupMetadata(from);
-            const participants = groupMetadata.participants;
-            let message = `📢 *TAG ALL*\n\n*Message:* ${text || "No message"}\n\n`;
-            participants.forEach((p, i) => { message += `${i + 1}. @${p.id.split("@")[0]}\n`; });
-            await sock.sendMessage(from, { text: message, mentions: participants.map(p => p.id) }, { quoted: m });
+            const metadata = await sock.groupMetadata(from);
+            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
+            const botIsAdmin = metadata.participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
+
+            if (!isAdmin) return;
+            if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I am not an admin." }, { quoted: m });
+
+            const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
+            if (!target) return;
+            if (target === metadata.owner) return;
+
+            await sock.groupParticipantsUpdate(from, [target], "demote");
+            await sock.sendMessage(from, { text: `✅ Demoted @${target.split("@")[0]}`, mentions: [target] }, { quoted: m });
         }
     }
 ];
