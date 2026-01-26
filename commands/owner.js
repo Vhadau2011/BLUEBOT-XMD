@@ -1,4 +1,3 @@
-const helper = require("../src/core/internal/helper");
 const { exec } = require("child_process");
 
 module.exports = [

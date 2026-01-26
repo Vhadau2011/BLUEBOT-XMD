@@ -5,15 +5,13 @@ module.exports = [
         name: "antilink",
         description: "Configure antilink system",
         category: "group",
-        async execute(sock, m, { from, sender, args, isMod }) {
+        async execute(sock, m, { from, sender, args, isMod, isAdmin }) {
             if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
             
             const metadata = await sock.groupMetadata(from);
-            const participants = metadata.participants;
-            const isAdmin = participants.find(p => p.id === sender)?.admin || isMod;
-            const botIsAdmin = participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
+            const botIsAdmin = metadata.participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
 
-            if (!isAdmin) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
+            if (!isAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
             if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I must be an admin to enforce antilink." }, { quoted: m });
 
             const mode = args[0]?.toLowerCase();
@@ -41,12 +39,10 @@ module.exports = [
         name: "setwelcome",
         description: "Configure welcome system",
         category: "group",
-        async execute(sock, m, { from, sender, text, args, isMod }) {
+        async execute(sock, m, { from, sender, text, args, isMod, isAdmin }) {
             if (!from.endsWith("@g.us")) return sock.sendMessage(from, { text: "❌ This command can only be used in groups." }, { quoted: m });
             
-            const metadata = await sock.groupMetadata(from);
-            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
-            if (!isAdmin) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
+            if (!isAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only group admins can use this command." }, { quoted: m });
 
             const mode = args[0]?.toLowerCase();
             if (mode === "on") {
@@ -93,13 +89,12 @@ module.exports = [
         name: "kick",
         description: "Remove a member",
         category: "group",
-        async execute(sock, m, { from, sender, isMod }) {
+        async execute(sock, m, { from, sender, isMod, isAdmin }) {
             if (!from.endsWith("@g.us")) return;
             const metadata = await sock.groupMetadata(from);
-            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
             const botIsAdmin = metadata.participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
 
-            if (!isAdmin) return sock.sendMessage(from, { text: "❌ Only admins can kick." }, { quoted: m });
+            if (!isAdmin && !isMod) return sock.sendMessage(from, { text: "❌ Only admins can kick." }, { quoted: m });
             if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I am not an admin." }, { quoted: m });
 
             const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
@@ -114,13 +109,12 @@ module.exports = [
         name: "promote",
         description: "Promote to admin",
         category: "group",
-        async execute(sock, m, { from, sender, isMod }) {
+        async execute(sock, m, { from, sender, isMod, isAdmin }) {
             if (!from.endsWith("@g.us")) return;
             const metadata = await sock.groupMetadata(from);
-            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
             const botIsAdmin = metadata.participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
 
-            if (!isAdmin) return;
+            if (!isAdmin && !isMod) return;
             if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I am not an admin." }, { quoted: m });
 
             const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
@@ -134,13 +128,12 @@ module.exports = [
         name: "demote",
         description: "Demote from admin",
         category: "group",
-        async execute(sock, m, { from, sender, isMod }) {
+        async execute(sock, m, { from, sender, isMod, isAdmin }) {
             if (!from.endsWith("@g.us")) return;
             const metadata = await sock.groupMetadata(from);
-            const isAdmin = metadata.participants.find(p => p.id === sender)?.admin || isMod;
             const botIsAdmin = metadata.participants.find(p => p.id === sock.user.id.split(":")[0] + "@s.whatsapp.net")?.admin;
 
-            if (!isAdmin) return;
+            if (!isAdmin && !isMod) return;
             if (!botIsAdmin) return sock.sendMessage(from, { text: "❌ I am not an admin." }, { quoted: m });
 
             const target = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || m.message?.extendedTextMessage?.contextInfo?.participant;
