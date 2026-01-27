@@ -24,12 +24,6 @@ if (!fs.existsSync(config.SESSION_ID)) {
     fs.mkdirSync(config.SESSION_ID);
 }
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-const question = (q) => new Promise(res => rl.question(q, res));
-
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState(config.SESSION_ID);
     const { version } = await fetchLatestBaileysVersion();
@@ -48,6 +42,12 @@ async function startBot() {
 
     // Pairing for unregistered session
     if (!sock.authState.creds.registered) {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+        const question = (q) => new Promise(res => rl.question(q, res));
+
         console.log("\n--- BLUEBOT-XMD PAIRING ---");
         let number = await question("Enter number (country code, no +): ");
         number = number.replace(/[^0-9]/g, "");
@@ -65,13 +65,13 @@ async function startBot() {
         } else {
             console.log("Invalid number. Please restart and enter a valid number.");
         }
+        rl.close();
     }
 
     sock.ev.on("creds.update", saveCreds);
 
     // Participants update handler (Welcome)
     sock.ev.on("group-participants.update", async (anu) => {
-        // Don't send welcome messages in banned groups
         if (isBanned("", anu.id)) return;
         await handleGroupParticipantsUpdate(sock, anu);
     });
@@ -94,7 +94,6 @@ async function startBot() {
             console.log(`Mode     : ${config.MODE}`);
             console.log("-----------------------------\n");
 
-            // Send connection message to owner
             const ownerJid = `${config.OWNER_NUMBER.replace(/[^0-9]/g, "")}@s.whatsapp.net`;
             sock.sendMessage(ownerJid, {
                 text: `🚀 *BLUEBOT-XMD bot connected*\n\nOwner: ${config.OWNER_NAME}\nMode: ${config.MODE}\n\n_System Status: Online_`
@@ -112,7 +111,6 @@ async function startBot() {
             const sender = m.key.participant || m.key.remoteJid;
             const senderNumber = sender.split("@")[0].split(":")[0];
 
-            // Check if user or group is banned
             const _isOwner = isOwner(senderNumber);
             if (!_isOwner && isBanned(sender, from)) return;
 
@@ -134,7 +132,6 @@ async function startBot() {
 
             if (config.MODE === "private" && !_isOwner) return;
 
-            // Load all commands recursively
             const commandsPath = path.join(__dirname, "commands");
             const allCommands = [];
 
@@ -190,7 +187,6 @@ async function startBot() {
         }
     });
 
-    // Anti-call
     sock.ev.on("call", async (call) => {
         if (config.ANTI_CALL) {
             await sock.rejectCall(call[0].id, call[0].from);
@@ -201,7 +197,6 @@ async function startBot() {
 blue.bot.start = startBot;
 module.exports = blue.bot;
 
-// Self-start if this is the main module
 if (require.main === module) {
     startBot().catch(err => console.error("START ERROR:", err));
 }

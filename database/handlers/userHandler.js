@@ -4,19 +4,23 @@ const db = require("../db_manager");
 const blue = { bot: {} };
 
 /**
+ * Normalizes a JID to a standard format.
+ */
+const normalizeJid = (jid) => {
+    if (!jid) return "";
+    return jid.split(":")[0].split("@")[0] + "@s.whatsapp.net";
+};
+
+/**
  * Checks if a user is the bot owner.
- * @param {string} senderNumber - The sender's phone number (without @s.whatsapp.net).
- * @returns {boolean}
  */
 blue.bot.isOwner = (senderNumber) => {
     const ownerNumber = config.OWNER_NUMBER.replace(/[^0-9]/g, "");
-    return senderNumber === ownerNumber;
+    return senderNumber.replace(/[^0-9]/g, "") === ownerNumber;
 };
 
 /**
  * Checks if a user is a moderator.
- * @param {string} senderNumber - The sender's phone number (without @s.whatsapp.net).
- * @returns {boolean}
  */
 blue.bot.isMod = (senderNumber) => {
     if (blue.bot.isOwner(senderNumber)) return true;
@@ -24,24 +28,23 @@ blue.bot.isMod = (senderNumber) => {
         .split(",")
         .map(num => num.replace(/[^0-9]/g, "").trim())
         .filter(Boolean);
-    return modsList.includes(senderNumber);
+    return modsList.includes(senderNumber.replace(/[^0-9]/g, ""));
 };
 
 /**
- * Checks if a user is an admin in a group.
- * @param {object} sock - The socket connection.
- * @param {string} from - The group JID.
- * @param {string} participant - The participant JID.
- * @returns {Promise<boolean>}
+ * Robust check for admin status.
  */
 blue.bot.isAdmin = async (sock, from, participant) => {
     if (!from.endsWith("@g.us")) return false;
     try {
         const groupMetadata = await sock.groupMetadata(from);
+        const normalizedParticipant = normalizeJid(participant);
+        
         const admins = groupMetadata.participants
             .filter(p => p.admin !== null && p.admin !== undefined)
-            .map(p => p.id);
-        return admins.includes(participant);
+            .map(p => normalizeJid(p.id));
+            
+        return admins.includes(normalizedParticipant);
     } catch (e) {
         console.error("Error checking admin status:", e);
         return false;
@@ -49,13 +52,18 @@ blue.bot.isAdmin = async (sock, from, participant) => {
 };
 
 /**
+ * Robust check for bot's admin status.
+ */
+blue.bot.isBotAdmin = async (sock, from) => {
+    return await blue.bot.isAdmin(sock, from, sock.user.id);
+};
+
+/**
  * Checks if a user or group is banned.
- * @param {string} userJid - The user's JID.
- * @param {string} groupJid - The group's JID (optional).
- * @returns {boolean}
  */
 blue.bot.isBanned = (userJid, groupJid = null) => {
-    if (db.isUserBanned(userJid)) return true;
+    const normalizedUser = normalizeJid(userJid);
+    if (db.isUserBanned(normalizedUser)) return true;
     if (groupJid && db.isGroupBanned(groupJid)) return true;
     return false;
 };
