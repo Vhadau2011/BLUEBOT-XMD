@@ -7,7 +7,7 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord, prefix, wtype, config, getData, storeData } = require("../src/core/kord_adapter")
+const { bluebot, prefix, wtype, config, getData, storeData } = require("../src/core/kord_adapter")
 const fs = require("fs")
 const path = require("path")
 const edb = require("../core/edb")
@@ -20,7 +20,7 @@ const k = "BLUEBOT"
 const stored = path.join(__dirname, '..', 'core', 'store')
 
 
-kord({
+bluebot({
 cmd: "economy|econ",
    desc: "manage economy commands",
    fromMe: wtype,
@@ -63,7 +63,7 @@ cmd: "economy|econ",
   }
 })
 
-kord({
+bluebot({
 cmd: "bal|wallet",
    desc: "[economy]shows user's balance",
    fromMe: wtype,
@@ -85,7 +85,7 @@ cmd: "bal|wallet",
   }
 })
 
-kord({
+bluebot({
 cmd: "daily",
    desc: "[economy] claim daily coins",
    fromMe: wtype,
@@ -110,7 +110,7 @@ cmd: "daily",
   }
 })
 
-kord({
+bluebot({
 cmd: "dep|deposit",
    desc: "[economy] deposit money to bank",
    fromMe: wtype,
@@ -145,7 +145,7 @@ cmd: "dep|deposit",
   }
 })
 
-kord({
+bluebot({
 cmd: "with|withdraw",
    desc: "[economy] withdraw money from bank",
    fromMe: wtype,
@@ -183,7 +183,7 @@ cmd: "with|withdraw",
   }
 })
 
-kord({
+bluebot({
 cmd: "give|pay",
    desc: "[economy] give money to someone",
    fromMe: wtype,
@@ -220,7 +220,7 @@ cmd: "give|pay",
   }
 })
 
-kord({
+bluebot({
 cmd: "work",
    desc: "[economy] work to earn money",
    fromMe: wtype,
@@ -252,7 +252,7 @@ cmd: "work",
   }
 })
 
-kord({
+bluebot({
 cmd: "rob",
    desc: "[economy] attempt to rob someone",
    fromMe: wtype,
@@ -300,7 +300,7 @@ cmd: "rob",
   }
 })
 
-kord({
+bluebot({
 cmd: "gamble|bet",
    desc: "[economy] gamble your money",
    fromMe: wtype,
@@ -345,7 +345,7 @@ cmd: "gamble|bet",
   }
 })
 
-kord({
+bluebot({
 cmd: "lb|leaderboard|top",
    desc: "[economy] show richest users",
    fromMe: wtype,
@@ -377,7 +377,7 @@ cmd: "lb|leaderboard|top",
   }
 })
 
-kord({
+bluebot({
 cmd: "shop",
    desc: "[economy] view available items",
    fromMe: wtype,
@@ -402,7 +402,7 @@ cmd: "shop",
   }
 })
 
-kord({
+bluebot({
 cmd: "buy",
    desc: "[economy] buy items from shop",
    fromMe: wtype,
@@ -435,7 +435,7 @@ cmd: "buy",
   }
 })
 
-kord({
+bluebot({
 cmd: "inv|inventory",
    desc: "[economy] view your inventory",
    fromMe: wtype,

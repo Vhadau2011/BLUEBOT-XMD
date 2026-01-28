@@ -30,7 +30,7 @@ const getRandomFont = () => {
   return "sansItalic"
 }
 
-kord({
+bluebot({
   cmd: "menu|help",
   desc: "list of commands",
   react: "💬",

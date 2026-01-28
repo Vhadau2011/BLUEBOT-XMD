@@ -7,7 +7,7 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord, extractUrlsFromString, getJson, Baileys, talkNote, prefix, wtype, config, ss } = require("../src/core/kord_adapter")
+const { bluebot, extractUrlsFromString, getJson, Baileys, talkNote, prefix, wtype, config, ss } = require("../src/core/kord_adapter")
 const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit")
@@ -21,7 +21,7 @@ const {
 const ffmpeg = require('fluent-ffmpeg');
 const http = require('http')
 
-kord({
+bluebot({
     cmd: "ss",
     desc: "screenshots a given url live page",
     fromMe: wtype,
@@ -45,7 +45,7 @@ kord({
     }
 })
 
-kord({
+bluebot({
     cmd: "sstab",
     desc: "screenshots a given url live page(tab view)",
     fromMe: wtype,
@@ -69,7 +69,7 @@ kord({
     }
 })
 
-kord({
+bluebot({
     cmd: "ssphone",
     desc: "screenshots a given url live page(Mobile version)",
     fromMe: wtype,
@@ -93,7 +93,7 @@ kord({
     }
 })
 
-kord({
+bluebot({
     cmd: "ssfull",
     desc: "screenshots a given url live page(full page version)",
     fromMe: wtype,
@@ -117,7 +117,7 @@ kord({
     }
 })
 
-kord({
+bluebot({
   cmd: "tts",
   desc: "text to speech",
   fromMe: wtype,
@@ -133,7 +133,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
 cmd: "audio2text|text",
   desc: "convert audio or video to text",
   fromMe: wtype,
@@ -152,7 +152,7 @@ cmd: "audio2text|text",
   }
 })
 
-kord({
+bluebot({
         cmd: "wm|walink",
         desc: "return walink of either replied/mention/chat user",
         fromMe: wtype,
@@ -176,7 +176,7 @@ kord({
      }   
 })
 
-kord({
+bluebot({
 cmd: "url|tourl|upload",
         desc: "uploads quoted media to BLUEBOT\'s Cdn and sends access url(safe)",
         fromMe: wtype,
@@ -195,7 +195,7 @@ cmd: "url|tourl|upload",
   }
 })
 
-kord({
+bluebot({
 cmd: "temp-url|temp-upload",
         desc: "uploads quoted media to BLUEBOT\'s Cdn and sends access url(temporarily)",
         fromMe: wtype,
@@ -214,7 +214,7 @@ cmd: "temp-url|temp-upload",
   }
 })
 
-kord({
+bluebot({
 cmd: "readmore",
         desc: "adds readmore to given text",
         fromMe: wtype,
@@ -234,7 +234,7 @@ cmd: "readmore",
 });
 
 
-kord({
+bluebot({
 cmd: "define|whatis",
         desc: "defines given text",
         react: "🧩",
@@ -258,7 +258,7 @@ cmd: "define|whatis",
   }
 })
 
-kord({
+bluebot({
 cmd: "weather",
         desc: "gives the weather information about given country",
         react: "🌦️",
@@ -299,7 +299,7 @@ cmd: "weather",
   }
 })
 
-kord({
+bluebot({
         cmd: "tinyurl|shorten-url",
         desc: "makes shortened url Using the tinyurl api",
         fromMe: wtype,
@@ -335,7 +335,7 @@ function getQ(q) {
   return null
 }
 
-kord({
+bluebot({
   cmd: "vv",
   desc: "resend a viewonce media as a normal media",
   fromMe: wtype,
@@ -403,7 +403,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   on: "all",
   fromMe: true,
 }, async (m, text) => {
@@ -456,7 +456,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   cmd: "pdf",
   desc: "Converts image to PDF or text to PDF",
   fromMe: wtype,
@@ -589,7 +589,7 @@ kord({
 });
 
 
-kord({
+bluebot({
 cmd: "calc|calculate",
   desc: "perform a calculation",
   fromMe: wtype,
@@ -608,7 +608,7 @@ cmd: "calc|calculate",
   }
 })
 
-kord({
+bluebot({
     cmd: "trt|translate",
     desc: "translate text to english/given lang code",
     fromMe: wtype,
@@ -640,7 +640,7 @@ kord({
     }
 })
 
-kord({
+bluebot({
 cmd: "ngl",
     desc: "send message to the ngl api (username and message)",
     fromMe: wtype,
@@ -665,7 +665,7 @@ cmd: "ngl",
   }
 })
 
-kord({
+bluebot({
 cmd: "ip|ipbot",
     desc: "get ip for the bot",
     fromMe: wtype,
@@ -693,7 +693,7 @@ cmd: "ip|ipbot",
   }
 })
 
-kord({
+bluebot({
 cmd: "wiki",
   desc: "search wiki",
   fromMe: wtype,
@@ -711,7 +711,7 @@ cmd: "wiki",
   }
 })
 
-kord({
+bluebot({
 cmd: "bible",
   desc: "get verse/verses from the bible",
   fromMe: wtype,
@@ -729,7 +729,7 @@ cmd: "bible",
   }
 })
 
-kord({
+bluebot({
 cmd: "font",
   desc: "change font of text",
   fromMe: wtype,
@@ -754,7 +754,7 @@ cmd: "font",
   }
 })
 
-kord({
+bluebot({
   cmd: "compress",
   desc: "compress image/video",
   fromMe: wtype,
@@ -810,7 +810,7 @@ kord({
 
 
 
-kord({
+bluebot({
 cmd: 'getdevice|device',
   desc: 'Get device of sender or quoted',
   fromMe: wtype,

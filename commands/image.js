@@ -8,7 +8,7 @@
  */
 
 const {
-   kord,
+   bluebot,
    wtype,
    prefix,
    remini,
@@ -29,7 +29,7 @@ const getImageUrl = async (m) => {
 
 
 
-kord({
+bluebot({
         cmd: "remini|upscale|hd",
         desc: "increase the quality of an image(pixelcut)",
         fromMe: wtype,
@@ -50,7 +50,7 @@ kord({
 })
 
 
-kord({
+bluebot({
         cmd: "gfx|gfx1",
         desc: "create gfx image",
         fromMe: wtype,
@@ -70,7 +70,7 @@ kord({
 }
 )
 
-kord({
+bluebot({
         cmd: "gfx2",
         desc: "create gfx2 image",
         fromMe: wtype,
@@ -90,7 +90,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx3",
         desc: "create gfx3 image",
         fromMe: wtype,
@@ -110,7 +110,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx4",
         desc: "create gfx4 image",
         fromMe: wtype,
@@ -130,7 +130,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx5",
         desc: "create gfx5 image with three texts",
         fromMe: wtype,
@@ -151,7 +151,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx6",
         desc: "create gfx6 image with three texts",
         fromMe: wtype,
@@ -172,7 +172,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx7",
         desc: "create gfx7 image",
         fromMe: wtype,
@@ -192,7 +192,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx8",
         desc: "create gfx8 image",
         fromMe: wtype,
@@ -212,7 +212,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx9",
         desc: "create gfx9 image with single text",
         fromMe: wtype,
@@ -231,7 +231,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx10",
         desc: "create gfx10 image with single text",
         fromMe: wtype,
@@ -249,7 +249,7 @@ kord({
 }
 )
 
-kord({
+bluebot({
         cmd: "gfx11",
         desc: "create gfx11 image with single text",
         fromMe: wtype,
@@ -268,7 +268,7 @@ kord({
 )
 
 
-kord({
+bluebot({
         cmd: "gfx12",
         desc: "create gfx12 image with single text",
         fromMe: wtype,
@@ -286,7 +286,7 @@ kord({
 }
 )
 
-kord({
+bluebot({
         cmd: "carbon",
         desc: "create carbon image from code",
         fromMe: wtype,
@@ -311,7 +311,7 @@ kord({
 }
 )
 
-kord({
+bluebot({
         cmd: "wanted",
         desc: "create mock wanted poster of replied user or pic",
         fromMe: wtype,
@@ -334,7 +334,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "wasted",
         desc: "create GTA wasted effect on replied user or pic",
         fromMe: wtype,
@@ -357,7 +357,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "rainbow",
         desc: "apply rainbow filter to replied user or pic",
         fromMe: wtype,
@@ -380,7 +380,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "trigger-meme",
         desc: "create triggered meme of replied user or pic",
         fromMe: wtype,
@@ -403,7 +403,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "rip-meme",
         desc: "create RIP meme of replied user or pic",
         fromMe: wtype,
@@ -426,7 +426,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "mnm",
         desc: "create M&M candy effect with replied user or pic",
         fromMe: wtype,
@@ -449,7 +449,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "jail",
         desc: "put replied user or pic behind bars",
         fromMe: wtype,
@@ -472,7 +472,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "invert",
         desc: "invert colors of replied user or pic",
         fromMe: wtype,
@@ -496,7 +496,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   cmd: "naturewlp",
   desc: "sends slides of nature wallpapers",
   fromMe: wtype,

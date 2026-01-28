@@ -7,9 +7,9 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord, installPlugin, removePlugin, listPlugins } = require("../src/core/kord_adapter")
+const { bluebot, installPlugin, removePlugin, listPlugins } = require("../src/core/kord_adapter")
 
-kord({
+bluebot({
   cmd: "plugin|install",
   desc: "install plugin from url",
   fromMe: true,
@@ -18,7 +18,7 @@ kord({
   await installPlugin(m, match)
 })
 
-kord({
+bluebot({
   cmd: "remove|uninstall",
   desc: "remove external plugin by name or url",
   fromMe: true,
@@ -27,7 +27,7 @@ kord({
   await removePlugin(m, match)
 })
 
-kord({
+bluebot({
   cmd: "plugins",
   desc: "list installed plugins",
   fromMe: true,

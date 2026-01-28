@@ -7,11 +7,11 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord, wtype, prefix, sleep, extractUrlsFromString, fb, ytaudio, config, ytvideo, xdl, tt, insta, mediaFire, rand, getBuffer } = require("../src/core/kord_adapter")
+const { bluebot, wtype, prefix, sleep, extractUrlsFromString, fb, ytaudio, config, ytvideo, xdl, tt, insta, mediaFire, rand, getBuffer } = require("../src/core/kord_adapter")
 const yts = require("yt-search")
 const { Sticker, StickerTypes } = require("wa-sticker-formatter");
 
-kord({
+bluebot({
 cmd: "apk",
   desc: "download an andriod app",
   type: "downloader",
@@ -45,7 +45,7 @@ cmd: "apk",
 })
 
 
-kord({
+bluebot({
 cmd: "apksearch",
   desc: "search apk and download",
   fromMe: wtype,
@@ -97,7 +97,7 @@ return await m.send({
   
 })
 
-kord({
+bluebot({
   cmd: "subtitle",
   desc: "Download English subtitle for a movie",
   type: "downloader",
@@ -137,7 +137,7 @@ ${config().CAPTION}`;
   );
 });
 
-kord({
+bluebot({
 cmd: "subtitlesearch|subtitles",
   desc: "Search subtitles from SubtitleCat",
   fromMe: wtype,
@@ -202,7 +202,7 @@ cmd: "subtitlesearch|subtitles",
 
 
 
-kord({
+bluebot({
         cmd: "ytv|ytmp4",
         desc: "download a YouTube video with its link",
         type: "downloader",
@@ -247,7 +247,7 @@ kord({
 })
 
 
-kord({
+bluebot({
         cmd: "yta|ytmp3",
         desc: "downloads YouTube audio with its link",
         fromMe: wtype,
@@ -291,7 +291,7 @@ try {
 }
 )
 
-kord({
+bluebot({
         cmd: "video|ytvideo",
         desc: "downloads and send video based on the title given",
         fromMe: wtype,
@@ -321,7 +321,7 @@ m.react("")
 }
 })
 
-kord({
+bluebot({
         cmd: "play|music",
         desc: "downloads and send audio based on the title given",
         fromMe: wtype,
@@ -353,7 +353,7 @@ kord({
        return m.send(`an error occured: ${err}`)
 }
 })
-kord({
+bluebot({
        cmd: "videodoc|ytvideodoc",
         desc: "downloads and send video(document) based on the title given",
         fromMe: wtype,
@@ -383,7 +383,7 @@ m.react("")
         }
 })
 
-kord({
+bluebot({
         cmd: "playdoc|musicdoc",
         desc: "downloads and send audio from YouTube as doc",
         fromMe: wtype,
@@ -418,7 +418,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "ytvdoc|ytmp4doc",
         desc: "download a YouTube video with its link and send as document",
         type: "downloader",
@@ -461,7 +461,7 @@ kord({
      }
 })
 
-kord({
+bluebot({
         cmd: "ytadoc|ytmp3doc",
         desc: "downloads YouTube audio with its link",
         fromMe: wtype,
@@ -504,7 +504,7 @@ try {
 }
 })
 
-kord({
+bluebot({
         cmd: "tt|tiktok",
         desc: "downloads tiktok videos using the link given",
         fromMe: wtype,
@@ -547,7 +547,7 @@ kord({
         
 })
 
-kord({
+bluebot({
         cmd: "tik-img|tt-img",
         desc: "downloads tiktok images using the link given",
         fromMe: wtype,
@@ -581,7 +581,7 @@ kord({
         }
 });
 
-kord({
+bluebot({
         cmd: "twitter|xdl",
         desc: "downloads Twitter/X video/pic",
         fromMe: wtype,
@@ -609,7 +609,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "fb|facebook",
         desc: "downloads Facebook videos",
         fromMe: wtype,
@@ -651,7 +651,7 @@ kord({
         }
 });
 
-kord({
+bluebot({
         cmd: "insta|ig",
         desc: "downloads Instagram videos/images",
         fromMe: wtype,
@@ -680,7 +680,7 @@ var link = links.find(url => igregex.test(url));
         }
 })
 
-kord({
+bluebot({
         cmd: "mediafire",
         desc: "downloads mediafire links",
         fromMe: wtype,
@@ -719,7 +719,7 @@ ${config().CAPTION}`
 })
 
 
-kord({
+bluebot({
   cmd: "gitclone|gitdl",
   desc: "download the zip file of a repo link",
   fromMe: wtype,
@@ -748,7 +748,7 @@ if (!lik) return await m.send("*provide a repo link!*")
 })
 
 
-kord({
+bluebot({
         cmd: "pint|pinterest",
         desc: "downloads Pinterest videos/images",
         fromMe: wtype,

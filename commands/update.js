@@ -3,12 +3,12 @@
  * Updates the bot from the official repository
  */
 
-const { kord, config } = require("../src/core/kord_adapter");
+const { bluebot, config } = require("../src/core/kord_adapter");
 const { exec } = require("child_process");
 const { promisify } = require("util");
 const execAsync = promisify(exec);
 
-kord({
+bluebot({
     cmd: "update",
     desc: "Update bot from official repository",
     fromMe: true,
@@ -65,7 +65,7 @@ kord({
     }
 });
 
-kord({
+bluebot({
     cmd: "restart",
     desc: "Restart the bot",
     fromMe: true,

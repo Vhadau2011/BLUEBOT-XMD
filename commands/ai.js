@@ -7,7 +7,7 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord,
+const { bluebot,
  wtype,
  chatWithAi,
  gemini,
@@ -21,7 +21,7 @@ const { kord,
 } = require("../src/core/kord_adapter")
 const axios = require('axios') 
 
-kord({
+bluebot({
   cmd: "openai",
   desc: "chat with ai (openai gpt-5 nano)",
   fromMe: wtype,
@@ -37,7 +37,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "gpt",
   desc: "chat with ai (openai fast)",
   fromMe: wtype,
@@ -53,7 +53,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "gemini",
   desc: "chat with ai (gemini 2.5)",
   fromMe: wtype,
@@ -69,7 +69,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "aisearch",
   desc: "chat with ai (gemini with google search)",
   fromMe: wtype,
@@ -85,7 +85,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "mistral",
   desc: "chat with ai (mistral small 3.2)",
   fromMe: wtype,
@@ -101,7 +101,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "deepseek",
   desc: "chat with ai (deepseek v3.1 reasoning)",
   fromMe: wtype,
@@ -117,7 +117,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "reasoning",
   desc: "chat with ai (openai o4 mini reasoning)",
   fromMe: wtype,
@@ -133,7 +133,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "coder",
   desc: "chat with ai (qwen coder)",
   fromMe: wtype,
@@ -149,7 +149,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "llama",
   desc: "chat with ai (llama 3.1)",
   fromMe: wtype,
@@ -165,7 +165,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "bidara",
   desc: "chat with ai (nasa biomimetic designer)",
   fromMe: wtype,
@@ -193,7 +193,7 @@ if (!getData("chatbot_cfg")) {
     storeData("chatbot_cfg", JSON.stringify(chatc, null, 2))
 }
 
-kord({
+bluebot({
   cmd: "chatbot",
   desc: "activate chatbot in chat",
   fromMe: true,
@@ -274,7 +274,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   on: "text",
   fromMe: false,
 }, async (m, text) => {
@@ -321,7 +321,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "aitest",
   desc: "test AI connectivity",
   fromMe: true,

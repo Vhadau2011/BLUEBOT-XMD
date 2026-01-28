@@ -8,9 +8,9 @@
  */
  
  
- const { kord, wtype, isAdmin, isadminn, saveFilter, listFilters, removeFilter, prefix, getData, storeData, isBotAdmin} = require("../src/core/kord_adapter")
+ const { bluebot, wtype, isAdmin, isadminn, saveFilter, listFilters, removeFilter, prefix, getData, storeData, isBotAdmin} = require("../src/core/kord_adapter")
 
-kord({
+bluebot({
   cmd: "delete|del|dlt",
   desc: "delete a replied message",
   fromMe: wtype,
@@ -46,7 +46,7 @@ kord({
 })
 
 
-kord({
+bluebot({
         cmd: "archive",
         desc: "archive a chat",
         fromMe: true,
@@ -68,7 +68,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "unarchive",
         desc: "unarchive a chat",
         fromMe: true,
@@ -91,7 +91,7 @@ kord({
 })
 
 
-kord({
+bluebot({
         cmd: "jid",
         desc: "gets jid of either replied user or present chat",
         fromMe: wtype,
@@ -106,7 +106,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "pp|setpp",
         desc: "changes profile pic to replied photo",
         fromMe: true,
@@ -127,7 +127,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "removepp",
         desc: "removes profile picture",
         fromMe: true,
@@ -142,7 +142,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "clear",
         desc: "clear a chat",
         fromMe: true,
@@ -163,7 +163,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "pinchat|chatpin",
         desc: "pin a chat",
         fromMe: true,
@@ -180,7 +180,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "unpinchat|unchatpin",
         desc: "unpin a chat",
         fromMe: true,
@@ -197,7 +197,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "block",
         desc: 'block a user',
         fromMe: true,
@@ -215,7 +215,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "unblock",
         desc: 'unblock a user',
         fromMe: true,
@@ -233,7 +233,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "blocklist",
         desc: "fetches list of blocked numbers",
         fromMe: true,
@@ -250,7 +250,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "setname",
         desc: "set profile name",
         fromMe: true,
@@ -267,7 +267,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "bio|setbio",
         desc: "set bio for profile",
         fromMe: true,
@@ -284,7 +284,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "getpp",
   desc: "get profile pic of a user/group",
   fromMe: true,
@@ -311,7 +311,7 @@ kord({
 })
 
 
-kord({
+bluebot({
         cmd: "forward|fwrd",
         desc: "forward a message",
         fromMe: true,
@@ -333,7 +333,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: 'lastseen',
 	fromMe: true,
 	desc: 'to change lastseen privacy',
@@ -350,7 +350,7 @@ kord({
     return await message.sendErr(e)
   }
 })
-kord({
+bluebot({
 cmd: 'online',
 	fromMe: true,
 	desc: 'to change online privacy',
@@ -367,7 +367,7 @@ cmd: 'online',
     return await message.sendErr(e)
   }
 })
-kord({
+bluebot({
 cmd: 'mypp',
 	fromMe: true,
 	desc: 'privacy setting profile picture',
@@ -384,7 +384,7 @@ cmd: 'mypp',
     return await message.sendErr(e)
   }
 })
-kord({
+bluebot({
 cmd: 'mystatus',
 	fromMe: true,
 	desc: 'privacy for my status',
@@ -401,7 +401,7 @@ cmd: 'mystatus',
     return await message.sendErr(e)
   }
 })
-kord({
+bluebot({
 cmd: 'read',
 	fromMe: true,
 	desc: 'privacy for read message',
@@ -418,7 +418,7 @@ cmd: 'read',
     return await message.sendErr(e)
   }
 })
-kord({
+bluebot({
 cmd: 'allow-gcadd|groupadd',
 	fromMe: true,
 	desc: 'privacy for group add',
@@ -438,7 +438,7 @@ cmd: 'allow-gcadd|groupadd',
 
 
 
-kord({
+bluebot({
   cmd: "pfilter",
   desc: "Set a PM filter",
   fromMe: true,
@@ -454,7 +454,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "pstop",
   desc: "Remove a PM filter",
   fromMe: true,
@@ -470,7 +470,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "gfilter",
   desc: "Set a group filter",
   fromMe: true,
@@ -487,7 +487,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "gstop",
   desc: "Remove a group filter",
   fromMe: true,
@@ -504,7 +504,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   on: "text",
   fromMe: false,
 }, async (m) => {
@@ -540,7 +540,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "mute-user",
   desc: "mute a user or a sticker",
   fromMe: true,
@@ -576,7 +576,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   cmd: "unmute-user",
   desc: "unmute a user or sticker",
   fromMe: true,
@@ -612,7 +612,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   on: "all",
   fromMe: false
 }, async (m) => {

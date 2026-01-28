@@ -9,7 +9,7 @@
 
 
 const {
-  kord,
+  bluebot,
   wtype,
   extractUrlsFromString,
   isAdmin,
@@ -39,7 +39,7 @@ let clientInstance
 
 
 
-kord({
+bluebot({
 cmd: "join",
   desc: "join a group using it's link",
   fromMe: true,
@@ -64,7 +64,7 @@ cmd: "join",
   }
 })
 
-kord({
+bluebot({
 cmd: "leave|left",
   desc: "leave a group",
   gc: true,
@@ -79,7 +79,7 @@ cmd: "leave|left",
   }
 })
 
-kord({
+bluebot({
 cmd: "gpp|setgcpp",
   desc: "set a group profile pic",
   gc: true,
@@ -104,7 +104,7 @@ cmd: "gpp|setgcpp",
   }
 })
 
-kord({
+bluebot({
 cmd: "gname|setgcname",
   desc: "set a group name(subject)",
   gc: true,
@@ -126,7 +126,7 @@ cmd: "gname|setgcname",
   }
 })
 
-kord({
+bluebot({
 cmd: "gdesc|setgcdesc",
   desc: "set a group description",
   gc: true,
@@ -148,7 +148,7 @@ cmd: "gdesc|setgcdesc",
   }
 })
 
-kord({
+bluebot({
   cmd: "add",
   desc: "add a user to group",
   gc: true,
@@ -191,7 +191,7 @@ const cleanNumber = (user.includes('@') ? user.split('@')[0] : user).replace(/\D
   }
 })
 
-kord({
+bluebot({
 cmd: "kick",
   desc: "remove a member from group",
   fromMe: wtype,
@@ -236,7 +236,7 @@ cmd: "kick",
   }
 })
 
-kord({
+bluebot({
 cmd: "promote",
   desc: "promote a member to admin",
   fromMe: wtype,
@@ -259,7 +259,7 @@ cmd: "promote",
   }
 })
 
-kord({
+bluebot({
 cmd: "demote",
   desc: "demote an admin to member",
   fromMe: wtype,
@@ -282,7 +282,7 @@ cmd: "demote",
   }
 })
 
-kord({
+bluebot({
   cmd: "mute",
   desc: "mute a group (immediate or scheduled)",
   fromMe: wtype,
@@ -399,7 +399,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "unmute",
   desc: "unmute a group (immediate or scheduled)",
   fromMe: wtype,
@@ -524,7 +524,7 @@ kord({
 })
 
 
-kord({
+bluebot({
 cmd: "invite|glink",
   desc: "get group link",
   fromMe: wtype,
@@ -543,7 +543,7 @@ cmd: "invite|glink",
   }
 })
 
-kord({
+bluebot({
 cmd: "revoke",
   desc: "reset group link",
   fromMe: wtype,
@@ -563,7 +563,7 @@ cmd: "revoke",
   }
 })
 
-kord({
+bluebot({
   cmd: "tag",
   desc: "tag all memebers/admins/me/text",
   fromMe: wtype,
@@ -619,7 +619,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "tagall",
   desc: "tag all memebers",
   fromMe: wtype,
@@ -648,7 +648,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   cmd: "creategc",
   desc: "create a group",
   fromMe: true,
@@ -665,7 +665,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
 cmd: "lock",
   desc: "make only admins can modify group settings",
   fromMe: wtype,
@@ -686,7 +686,7 @@ cmd: "lock",
   }
 })
 
-kord({
+bluebot({
 cmd: "unlock",
   desc: "allow all members to modify group settings",
   fromMe: wtype,
@@ -707,7 +707,7 @@ cmd: "unlock",
   }
 })
 
-kord({
+bluebot({
   cmd: "ginfo",
   desc: "get group info of a group",
   fromMe: wtype,
@@ -769,7 +769,7 @@ ${groupInfo.desc ? `├ ➨ *Description:* \n${groupInfo.desc}\n` : ''}
 })
 
 
-kord({
+bluebot({
   cmd: "antibot",
   desc: "set action to be done when a visitor bot messaes in group",
   fromMe: wtype,
@@ -873,7 +873,7 @@ _${pre}antibot off_`
     }
 })
 
-kord({
+bluebot({
 on: "all",
 }, async (m, text) => {
   try {
@@ -931,7 +931,7 @@ Warning(s): (${cCount}/${maxC})`
 
 
 
-kord({
+bluebot({
 cmd: "events|gcevent|grpevents",
   desc: "manage group events settings",
   gc: true,
@@ -1125,7 +1125,7 @@ _events setgoodbye text - Set goodbye message_
 })
 
 
-kord({
+bluebot({
 cmd: "antilink",
   desc: "automactically delete links in group",
   fromMe: wtype,
@@ -1266,7 +1266,7 @@ ${c} off\`\`\``
   }
 })
 
-kord({
+bluebot({
 on: "all",
 }, async (m, text) => {
   try {
@@ -1327,7 +1327,7 @@ on: "all",
 })
 
 
-kord({
+bluebot({
   cmd: "akick",
   desc: "auto kick user",
   fromMe: wtype,
@@ -1369,7 +1369,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
 cmd: "antiword",
   desc: "auto delete words you set",
   fromMe: wtype,
@@ -1532,7 +1532,7 @@ Words: ${dw.words.join(", ") || "None"}
 })
 
 var warns = {}
-kord({
+bluebot({
 on: "all",
   fromMe: false,
 }, async (m, text) => {
@@ -1581,7 +1581,7 @@ if (d.action == "warn") {
   }
 })
 
-kord({
+bluebot({
 cmd: "warn",
   desc: "warn user and kick if warnings exceeded",
   type: "group",
@@ -1621,7 +1621,7 @@ cmd: "warn",
   }
 })
 
-kord({
+bluebot({
   cmd: "antigm",
   desc: "set action to be done when a person mentions the group",
   fromMe: wtype,
@@ -1725,7 +1725,7 @@ _${pre}antigm off_`
     }
 })
 
-kord({
+bluebot({
 on: "all",
 }, async (m, text) => {
   try {
@@ -1788,7 +1788,7 @@ const formatTimeAgo = sec => {
   return `${h} hours ${m} minutes ${s} seconds ago`
 }
 
-kord({
+bluebot({
   cmd: "msgs",
   desc: "Show message stats",
   fromMe: true,
@@ -1873,7 +1873,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   cmd: "antispam",
   desc: "set action to be done when a person sends spam messages",
   fromMe: wtype,
@@ -2002,7 +2002,7 @@ _${pre}antispam off_`
 const userMessageCount = new Map()
 const userWarnings = new Map()
 
-kord({
+bluebot({
 on: "all",
 }, async (m, text) => {
   try {
@@ -2091,7 +2091,7 @@ _Remaining:_ ${remain}`
 })
 
 
-kord({
+bluebot({
   cmd: "antitag",
   desc: "set action to be done when a person tags all group members",
   fromMe: wtype,
@@ -2224,7 +2224,7 @@ _${pre}antitag off_`
 
 const tagWarnings = new Map()
 
-kord({
+bluebot({
 on: "all",
 }, async (m, text) => {
   try {
@@ -2376,7 +2376,7 @@ const listOnlineOffline = async (m, text, store, mode, sock) => {
   return m.send(`*${mode.charAt(0).toUpperCase() + mode.slice(1)} users:*\n${textList}`, { mentions })
 }
 
-kord({
+bluebot({
   cmd: "listonline",
   desc: "List online users by interval",
   fromMe: wtype,
@@ -2385,7 +2385,7 @@ kord({
   adminOnly: true
 }, async (m, text, c, store) => listOnlineOffline(m, text, store, "online", m.client))
 
-kord({
+bluebot({
   cmd: "listoffline",
   desc: "List offline users by interval",
   fromMe: wtype,
@@ -2394,7 +2394,7 @@ kord({
   adminOnly: true
 }, async (m, text, c, store) => listOnlineOffline(m, text, store, "offline", m.client))
 
-kord({
+bluebot({
 cmd: "kickr",
   desc: "remove mentioned members from replied message except sender",
   fromMe: wtype,

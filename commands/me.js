@@ -7,7 +7,7 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord,
+const { bluebot,
   commands,
   wtype,
   getData,
@@ -27,7 +27,7 @@ const path = require('path')
 const fs = require('fs')
 const { warn } = require("../database/db_manager")
 
-kord({
+bluebot({
 cmd: 'ping',
   desc: 'check the bot ping',
   react: "🙂‍↔️",
@@ -47,7 +47,7 @@ cmd: 'ping',
 });
 
 
-kord({
+bluebot({
   cmd: "ban",
   desc: "bans a user from using the bot",
   fromMe: true,
@@ -88,7 +88,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "unban",
   desc: "unbans an already banned user",
   fromMe: true,
@@ -128,7 +128,7 @@ kord({
     return await m.sendErr(e)
   }
 })
-kord({
+bluebot({
 cmd: "banlist",
   desc: "shows all banned users",
   fromMe: true,
@@ -150,7 +150,7 @@ cmd: "banlist",
   }
 })
 
-kord({
+bluebot({
 cmd: 'uptime',
   desc: 'checks the bot\'s uptime',
   react: '💨',
@@ -166,7 +166,7 @@ cmd: 'uptime',
   }
 })
 
-kord({
+bluebot({
   cmd: 'quoted',
   desc: 'resends the a replied messges of the quoted msg',
   fromMe: wtype,
@@ -187,7 +187,7 @@ kord({
     }
 })
 
-kord({
+bluebot({
 cmd: "list",
   desc: "shows the list of available comamnds and their description",
   react: "☯️",
@@ -214,7 +214,7 @@ return m.send(list)
 
 const pm2 = require('pm2')
 
-kord({
+bluebot({
   cmd: "restart|reboot",
   desc: "restart ths bot",
   fromMe: true,
@@ -236,7 +236,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "shutdown",
   desc: "shut the bot down (you'll have to restart on server)",
   fromMe: true,
@@ -259,7 +259,7 @@ kord({
 })
 
 
-kord({
+bluebot({
   cmd: "runtime",
   desc: "get runtime of bot with cool display",
   fromMe: wtype,
@@ -303,7 +303,7 @@ kord({
 
     
 
-kord({
+bluebot({
   cmd: "p-status",
   desc: "checks process status",
   fromMe: true,
@@ -372,7 +372,7 @@ kord({
 
 
 
-kord({
+bluebot({
   cmd: "stats",
   desc: "Show bot performance stats",
   fromMe: wtype,
@@ -415,7 +415,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   on: "all",
   fromMe: false,
 }, async (m, text) => {
@@ -470,7 +470,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   on: "all",
   fromMe: false,
 }, async (m, text) => {
@@ -517,7 +517,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
 cmd: "owner",
   desc: "sends owner contact",
   fromMe: wtype,
@@ -545,7 +545,7 @@ END:VCARD`
   }
 })
 
-kord({
+bluebot({
 cmd: "repo|sc|script",
   desc: "send repository link of the bot",
   fromMe: wtype,
@@ -565,7 +565,7 @@ cmd: "repo|sc|script",
   }
 })
 
-kord({
+bluebot({
 cmd: "update",
     desc: "update bot",
     fromMe: true,

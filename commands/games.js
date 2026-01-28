@@ -8,9 +8,9 @@
  */
  
  
-const { kord, isAdmin, prefix, TicTacToe, WCG, wtype } = require("../src/core/kord_adapter")
+const { bluebot, isAdmin, prefix, TicTacToe, WCG, wtype } = require("../src/core/kord_adapter")
 
-kord({
+bluebot({
   cmd: "delttt",
   desc: "delete TicTacToe running game.",
   fromMe: wtype,
@@ -31,7 +31,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "ttt",
   desc: "Play TicTacToe",
   fromMe: wtype,
@@ -71,7 +71,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   on: "text",
   fromMe: false
 }, async (m, text) => {
@@ -370,7 +370,7 @@ All players were inactive`)
   }
 }
 
-kord({
+bluebot({
   cmd: 'wcg',
   desc: 'start a Word Chain Game',
   fromMe: wtype,
@@ -476,7 +476,7 @@ ${playerList}
   }
 })
 
-kord({
+bluebot({
   cmd: 'delwcg',
   desc: 'delete running WCG game',
   fromMe: wtype,
@@ -520,7 +520,7 @@ ${game.wordsCount ? `📊 *Final Stats:*
   }
 })
 
-kord({
+bluebot({
   on: 'text',
   fromMe: false
 }, async (m, text) => {

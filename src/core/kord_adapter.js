@@ -17,7 +17,7 @@ const commands = [];
  * @param {Object} cmdConfig - Command configuration
  * @param {Function} handler - Command handler function
  */
-function kord(cmdConfig, handler) {
+function bluebot(cmdConfig, handler) {
     const cmdNames = (cmdConfig.cmd || cmdConfig.on || "").split("|");
     const mainCmd = cmdNames[0];
     const aliases = cmdNames.slice(1);
@@ -226,7 +226,7 @@ const prefix = config.PREFIX;
 
 // Export everything
 module.exports = {
-    kord,
+    bluebot,
     commands,
     wtype,
     extractUrlsFromString,

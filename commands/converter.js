@@ -22,7 +22,7 @@ const {
    fromBuffer
 } = require('file-type')
 
-kord({
+bluebot({
         cmd: "sticker|s|stk",
         desc: "converts replied media to sticker",
         fromMe: wtype,
@@ -56,7 +56,7 @@ kord({
   })
 
 
-kord({
+bluebot({
 cmd: "photo|toimg",
         desc: "convert sticker to image",
         fromMe: wtype,
@@ -73,7 +73,7 @@ cmd: "photo|toimg",
   }
 })
 
-kord({
+bluebot({
 cmd: "ptv",
         desc: "converts video to ptv message",
         fromMe: wtype,
@@ -89,7 +89,7 @@ cmd: "ptv",
   }
 })
 
-kord({
+bluebot({
         cmd: "mp4",
         desc: "converts sticker to video",
         fromMe: wtype,
@@ -106,7 +106,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
         cmd: "gif",
         desc: "converts sticker to gif",
         fromMe: wtype,
@@ -123,7 +123,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "tomp3|toaudio",
   desc: "convert video to audio",
   fromMe: wtype,
@@ -138,7 +138,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
 cmd: "black",
   desc: "converts mp3 to black video",
   fromMe: wtype,
@@ -187,7 +187,7 @@ cmd: "black",
 })
 
 
-kord({
+bluebot({
 cmd: "roundstk|round",
   desc: "create or convert sticker to round frame type",
   fromMe: wtype,
@@ -230,7 +230,7 @@ cmd: "roundstk|round",
   }
 })
 
-kord({
+bluebot({
 cmd: "circlestk|circle",
   desc: "create or convert sticker to circle frame type",
   fromMe: wtype,
@@ -274,7 +274,7 @@ cmd: "circlestk|circle",
 })
 
 
-kord({
+bluebot({
   cmd: "take|steal",
   desc: "change the data of a sticker or audio",
   fromMe: wtype,
@@ -345,7 +345,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
 cmd: "exif",
   desc: "get exif data of a sticker",
   fromMe: wtype,
@@ -367,7 +367,7 @@ cmd: "exif",
   }
 })
 
-kord({
+bluebot({
 cmd: "aitts",
   desc: "tts ai with id split with |",
   fromMe: wtype,
@@ -392,7 +392,7 @@ cmd: "aitts",
   }
 })
 
-kord({
+bluebot({
 cmd: "doc",
   desc: "converts media to document",
   fromMe: wtype,
@@ -411,7 +411,7 @@ cmd: "doc",
   }
 })
 
-kord({
+bluebot({
 cmd: "tovv",
   desc: "convert media to viewonce",
   fromMe: wtype,
@@ -438,7 +438,7 @@ cmd: "tovv",
   }
 })
 
-kord({
+bluebot({
 cmd: "bass",
   desc: "apply bass effect to audio",
   fromMe: wtype, 
@@ -462,7 +462,7 @@ cmd: "bass",
   }
 })
 
-kord({
+bluebot({
   cmd: "blown",
   desc: "apply blown effect to audio",
   fromMe: wtype, 
@@ -485,7 +485,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "deep",
   desc: "apply deep effect to audio",
   fromMe: wtype, 
@@ -504,7 +504,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "earrape",
   desc: "apply extremely loud effect to audio",
   fromMe: wtype, 
@@ -523,7 +523,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "fast",
   desc: "speed up audio",
   fromMe: wtype, 
@@ -542,7 +542,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "fat",
   desc: "apply fat effect to audio",
   fromMe: wtype, 
@@ -561,7 +561,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "nightcore",
   desc: "apply nightcore effect to audio",
   fromMe: wtype, 
@@ -580,7 +580,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "reverse",
   desc: "reverse audio playback",
   fromMe: wtype, 
@@ -599,7 +599,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "squirrel",
   desc: "apply squirrel voice effect to audio",
   fromMe: wtype, 
@@ -618,7 +618,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "robot",
   desc: "apply robot voice effect to audio",
   fromMe: wtype, 
@@ -637,7 +637,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "slow",
   desc: "slow down audio",
   fromMe: wtype, 
@@ -656,7 +656,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "smooth",
   desc: "apply smooth effect to audio",
   fromMe: wtype, 
@@ -675,7 +675,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "chipmunk",
   desc: "apply chipmunk voice effect to audio",
   fromMe: wtype, 
@@ -694,7 +694,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "tremolo",
   desc: "apply tremolo effect to audio",
   fromMe: wtype, 
@@ -713,7 +713,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "vibrato",
   desc: "apply vibrato effect to audio",
   fromMe: wtype, 
@@ -732,7 +732,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "8d",
   desc: "apply 8D surround effect to audio",
   fromMe: wtype, 
@@ -751,7 +751,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "echo",
   desc: "apply echo effect to audio",
   fromMe: wtype, 
@@ -770,7 +770,7 @@ try {
 }
 })
 
-kord({
+bluebot({
   cmd: "flanger",
   desc: "apply flanger effect to audio",
   fromMe: wtype, 

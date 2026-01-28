@@ -7,7 +7,7 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord,
+const { bluebot,
   wtype,
   npmstalk,
   duckduckgo,
@@ -60,7 +60,7 @@ BLUEBOT(
 })
 
 
-kord({
+bluebot({
         cmd: "img|image",
         desc: "search images based on query",
         fromMe: wtype,
@@ -89,7 +89,7 @@ kord({
         }
 })
 
-kord({
+bluebot({
         cmd: "npm",
         desc: "gives description of a given npm package",
         fromMe: wtype,
@@ -127,7 +127,7 @@ function sign(signString, accessSecret) {
         .digest()
         .toString('base64')
 }
-kord({
+bluebot({
   cmd: "shazam|findaudio|find|identifyaudio",
   desc: "search for audio details of replied video/audio",
   fromMe: wtype,
@@ -251,7 +251,7 @@ kord({
 
 
 
-kord({
+bluebot({
   cmd: "element",
   desc: "get info of a periodic element",
   fromMe: wtype,

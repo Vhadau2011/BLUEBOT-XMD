@@ -7,13 +7,13 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord, wtype, updateConfig, prefix, updateEnv, updateEnvSudo, addEnvSudo, removeEnvSudo, replaceEnvSudo, getEnvValue, envExists, listEnvKeys, toBoolean, getPlatformInfo, setVar, updateVar, delVar, getVars, config, myMods, getAdmins 
+const { bluebot, wtype, updateConfig, prefix, updateEnv, updateEnvSudo, addEnvSudo, removeEnvSudo, replaceEnvSudo, getEnvValue, envExists, listEnvKeys, toBoolean, getPlatformInfo, setVar, updateVar, delVar, getVars, config, myMods, getAdmins 
   } = require("../src/core/kord_adapter")
   const fs = require("fs")
   
   
   
-kord({
+bluebot({
   cmd: "setvar",
   desc: "set a config in config.env/config.js",
   fromMe: true,
@@ -54,7 +54,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
 cmd: "getvar",
   desc: "get all variables from config.js/config.env",
   fromMe: true,
@@ -78,7 +78,7 @@ cmd: "getvar",
   }
 })
 
-kord({
+bluebot({
   cmd: 'delvar',
   desc: "delete a variable/setting",
   fromMe: true,
@@ -109,7 +109,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "allvar",
   desc: "get all variables/settings",
   fromMe: true,
@@ -285,21 +285,21 @@ function deltog() {
 }
 
 
-kord({
+bluebot({
   cmd: "readstatus",
   desc: "turn on/off readstatus",
   fromMe: true,
   type: "config",
 }, toggle("readstatus", "STATUS_VIEW", "Read Status"))
 
-kord({
+bluebot({
   cmd: "likestatus",
   desc: "turn on/off likestatus",
   fromMe: true,
   type: "config",
 }, toggle("likestatus", "LIKE_STATUS", "Like Status"))
 
-kord({
+bluebot({
   cmd: "startupmsg",
   desc: "turn on/off startupmsg",
   fromMe: true,
@@ -307,14 +307,14 @@ kord({
 }, toggle("startupmsg", "STARTUP_MSG", "Startup Msg"))
 
 
-kord({
+bluebot({
   cmd: "alwaysonline",
   desc: "turn on/off always online",
   fromMe: true,
   type: "config",
 }, toggle("alwaysonline", "ALWAYS_ONLINE", "Always Online"))
 
-kord({
+bluebot({
   cmd: "antidelete",
   desc: "configure antidelete settings",
   fromMe: true,
@@ -322,49 +322,49 @@ kord({
 }, deltog())
 
 
-kord({
+bluebot({
   cmd: "antiedit",
   desc: "turn on/off Anti-Edit",
   fromMe: true,
   type: "config",
 }, toggle("antiedit", "ANTI_EDIT", "Anti Edit"))
 
-kord({
+bluebot({
   cmd: "antieditchat",
   desc: "turn on/off antiedit in chat",
   fromMe: true,
   type: "config",
 }, toggle("antieditchat", "ANTI_EDIT_IN_CHAT", "Anti Edit In Chat"))
 
-kord({
+bluebot({
   cmd: "savestatus",
   desc: "turn on/off save status",
   fromMe: true,
   type: "config",
 }, toggle("savestatus", "SAVE_STATUS", "Save Status"))
 
-kord({
+bluebot({
   cmd: "cmdreact",
   desc: "turn on/off command react",
   fromMe: true,
   type: "config",
 }, toggle("cmdreact", "CMD_REACT", "Command React"))
 
-kord({
+bluebot({
   cmd: "readmsg|read",
   desc: "turn on/off read message",
   fromMe: true,
   type: "config",
 }, toggle("readmsg", "READ_MESSAGE", "Read Message"))
 
-kord({
+bluebot({
   cmd: "rejectcall",
   desc: "turn on/off reject call",
   fromMe: true,
   type: "config",
 }, toggle("rejectcall", "REJECT_CALL", "Reject Call"))
 
-kord({
+bluebot({
   cmd: "setsudo",
   desc: "add a user to sudo",
   fromMe: true,
@@ -416,7 +416,7 @@ if (text.trim().toLowerCase() === 'admins') {
   }
 })
 
-kord({
+bluebot({
   cmd: "delsudo",
   desc: "delete user from sudo list",
   fromMe: true,
@@ -468,7 +468,7 @@ if (text.trim().toLowerCase() === 'admins') {
 })
 
 
-kord({
+bluebot({
 cmd: "getsudo|allsudo",
   desc: "get all sudos",
   fromMe: wtype,
@@ -496,7 +496,7 @@ cmd: "getsudo|allsudo",
   }
 })
 
-kord({
+bluebot({
   cmd: "setmod|addmod",
   desc: "add a user to mod list",
   fromMe: true,
@@ -548,7 +548,7 @@ if (text.trim().toLowerCase() === 'admins') {
   }
 })
 
-kord({
+bluebot({
   cmd: "delmod",
   desc: "delete user from mod list",
   fromMe: true,
@@ -599,7 +599,7 @@ if (text.trim().toLowerCase() === 'admins') {
   }
 })
 
-kord({
+bluebot({
 cmd: "getmods|getmod|allmods",
   desc: "get all mods",
   fromMe: wtype,
@@ -629,7 +629,7 @@ cmd: "getmods|getmod|allmods",
 })
 
 
-kord({
+bluebot({
 cmd: "mode",
   desc: "set bot to private or public",
   fromMe: true,
@@ -672,7 +672,7 @@ cmd: "mode",
   }
 })
 
-kord({
+bluebot({
 cmd: "statusemoji",
   desc: "set like status emoji",
   fromMe: true,
@@ -687,7 +687,7 @@ cmd: "statusemoji",
   }
 })
 
-kord({
+bluebot({
   cmd: "savecmd",
   desc: "set save emoji",
   fromMe: true,
@@ -702,7 +702,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "vvcmd",
   desc: "set vv emoji",
   fromMe: true,

@@ -7,11 +7,11 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord, config, prefix, wtype, textMaker } = require("../src/core/kord_adapter");
+const { bluebot, config, prefix, wtype, textMaker } = require("../src/core/kord_adapter");
 const fetch = require('node-fetch');
 
 const createCmd = (name, effectUrl, emoji, description, options = {}) => {
-    kord({
+    bluebot({
         cmd: name.toLowerCase(),
         desc: `Creates ${description} using EpPhoto360`,
         type: "textmaker",

@@ -7,7 +7,7 @@
  * -------------------------------------------------------------------------------
  */
 
-const { kord,
+const { bluebot,
 commands,
 wtype,
 prefix,
@@ -23,7 +23,7 @@ const fs = require("fs")
 const pre = prefix
 
 
-kord({
+bluebot({
   cmd: "setcmd",
   desc: "bind a command to a sticker (whenevrr that stk is sent, the binded command is executed)",
   fromMe: true,
@@ -46,7 +46,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "delcmd",
   desc: "Remove/unbind a command from a sticker",
   fromMe: true,
@@ -73,7 +73,7 @@ kord({
   }
 });
 
-kord({
+bluebot({
   cmd: "listcmd|listcmds",
   desc: "List all sticker-bound commands",
   fromMe: true,
@@ -98,7 +98,7 @@ kord({
 });
 
 
-kord({
+bluebot({
   cmd: "delcmds",
   desc: "Delete all sticker-bound commands",
   fromMe: true,
@@ -122,7 +122,7 @@ kord({
 });
 
 
-kord({
+bluebot({
   cmd: "permit",
   desc: "permit a command or command group to work even when bot is private",
   fromMe: true,
@@ -340,7 +340,7 @@ kord({
     }
 })
 
-kord({
+bluebot({
   cmd: "mention",
   type: "tools",
   desc: "set action to be done when owner is mentioned",
@@ -401,7 +401,7 @@ _.mention -text Your Text_ (sends custom text when owner is mentioned, Example: 
     m.send(`${e}`)
   } 
 })
-kord({
+bluebot({
   on: "all"
 }, async (m, text) => {
   try {
@@ -446,7 +446,7 @@ async function saveAfkData(data) {
   }
 }
 
-kord({
+bluebot({
   cmd: "afk",
   desc: "set afk message",
   fromMe: wtype,
@@ -498,7 +498,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   on: "all",
 }, async (message, text, c, store) => {
   try {
@@ -605,7 +605,7 @@ if (!getData("areact_config")) {
      storeData("areact_config", JSON.stringify(areact, null, 2));
     }
     
-kord({
+bluebot({
   cmd: "areact|autoreact|autoreaction",
   desc: "automatically react to messages",
   fromMe: true,
@@ -666,7 +666,7 @@ m.send(`_*Avaliable Options:*_
   }
 })
 
-kord({
+bluebot({
   on: "all",
   fromMe: false,
 }, async(m, text) =>{
@@ -693,7 +693,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "ignore",
   desc: "ignores the current chat",
   fromMe: true,
@@ -714,7 +714,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "allow",
   desc: "removes the current chat from ignore list",
   fromMe: true,
@@ -735,7 +735,7 @@ kord({
   }
 })
 
-kord({
+bluebot({
   cmd: "bot",
   desc: "turn bot on or off in this chat",
   fromMe: true,
