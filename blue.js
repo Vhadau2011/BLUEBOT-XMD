@@ -4,6 +4,19 @@ const config = require("./config");
 const blue = { bot: {} };
 
 /**
+ * Check if user is the developer (LOCKED - cannot be changed)
+ * @param {string} number - User number without @s.whatsapp.net
+ * @returns {boolean}
+ */
+function isDeveloper(number) {
+    const devNumber = config.DEVELOPER_NUMBER.replace(/[^0-9]/g, "");
+    const userNumber = number.replace(/[^0-9]/g, "");
+    return userNumber === devNumber;
+}
+
+blue.bot.isDeveloper = isDeveloper;
+
+/**
  * Handles group participants update events (Welcome/Goodbye).
  * @param {object} sock - The socket connection.
  * @param {object} anu - The update event data.
@@ -54,5 +67,6 @@ blue.bot.isAdmin = isAdmin;
 blue.bot.isMod = isMod;
 blue.bot.isOwner = isOwner;
 blue.bot.isBanned = isBanned;
+blue.bot.isDeveloper = isDeveloper;
 
 module.exports = blue.bot;

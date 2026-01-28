@@ -64,4 +64,34 @@ blue.bot.unbanUser = (jid) => {
 blue.bot.isGroupBanned = (jid) => readJSON(GROUPS_FILE).includes(jid);
 blue.bot.isUserBanned = (jid) => readJSON(USERS_FILE).includes(jid);
 
+// Warn system
+const warnDb = {};
+
+blue.bot.warn = async (groupId, userId, reason = "No reason provided") => {
+    const key = `${groupId}_${userId}`;
+    if (!warnDb[key]) {
+        warnDb[key] = [];
+    }
+    warnDb[key].push({
+        reason,
+        timestamp: Date.now()
+    });
+    return warnDb[key].length;
+};
+
+blue.bot.getWarns = async (groupId, userId) => {
+    const key = `${groupId}_${userId}`;
+    return warnDb[key] || [];
+};
+
+blue.bot.resetWarns = async (groupId, userId) => {
+    const key = `${groupId}_${userId}`;
+    warnDb[key] = [];
+    return true;
+};
+
+// Export warn as a standalone function for compatibility
+const warn = blue.bot.warn;
+
 module.exports = blue.bot;
+module.exports.warn = warn;

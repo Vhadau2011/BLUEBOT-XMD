@@ -17,7 +17,7 @@ const config = require("./config");
 const blue = { bot: {} };
 
 // Import handlers using the new export style
-const { handleGroupParticipantsUpdate, isAdmin, isMod, isOwner, isBanned } = require("./blue.js");
+const { handleGroupParticipantsUpdate, isAdmin, isMod, isOwner, isBanned, isDeveloper } = require("./blue.js");
 
 // Ensure session directory exists
 if (!fs.existsSync(config.SESSION_ID)) {
@@ -54,16 +54,23 @@ async function startBot() {
         
         if (number.length > 5) {
             console.log("Requesting pairing code...");
-            await delay(3000);
+            await delay(2000);
             try {
                 const code = await sock.requestPairingCode(number);
                 console.log(`\n✅ Your Pairing Code: ${code}\n`);
-                console.log("Enter this code in your WhatsApp (Linked Devices > Link with phone number)\n");
+                console.log("Enter this code in your WhatsApp:");
+                console.log("Go to: Linked Devices > Link with phone number\n");
+                console.log("Waiting for pairing to complete...\n");
             } catch (err) {
                 console.error("Failed to request pairing code:", err);
+                console.error("Please ensure the number is correct and try again.");
+                rl.close();
+                return;
             }
         } else {
             console.log("Invalid number. Please restart and enter a valid number.");
+            rl.close();
+            return;
         }
         rl.close();
     }
@@ -129,6 +136,7 @@ async function startBot() {
 
             const _isMod = isMod(senderNumber);
             const _isAdmin = await isAdmin(sock, from, sender);
+            const _isDeveloper = isDeveloper(senderNumber);
 
             if (config.MODE === "private" && !_isOwner) return;
 
@@ -177,6 +185,7 @@ async function startBot() {
                     isOwner: _isOwner, 
                     isMod: _isMod, 
                     isAdmin: _isAdmin,
+                    isDeveloper: _isDeveloper,
                     config 
                 });
             }
