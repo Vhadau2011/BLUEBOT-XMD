@@ -1,10 +1,11 @@
-/* 
- * Copyright © 2026 mudau_t
- * This file is part of BLUEBOT and is licensed under the GNU GPLv3.
- * And I hope you know what you're doing here.
- * You may not use this file except in compliance with the License.
- * See the LICENSE file or https://www.gnu.org/licenses/gpl-3.0.html
- * -------------------------------------------------------------------------------
+/* /* 
+ * ┌─────────────────────────────┐
+ * │  Copyright © 2026 mudau_t         │
+ * │  BLUEBOT-XMD | GPLv3              │
+ * └─────────────────────────────┘
+ * ⚡ Heads up! Only use this file if you know what you're doing.
+ * 🔗 License details: https://www.gnu.org/licenses/gpl-3.0.html
+ * 🩵 and Also read the Blue news guid line 
  */
  
  
