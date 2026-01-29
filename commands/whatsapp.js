@@ -1,5 +1,5 @@
 /* 
- * Copyright © 2025 Kenny
+ * Copyright © 2026 mudau_t
  * This file is part of BLUEBOT and is licensed under the GNU GPLv3.
  * And I hope you know what you're doing here.
  * You may not use this file except in compliance with the License.
@@ -233,23 +233,32 @@ bluebot({
   }
 })
 
-bluebot({
-        cmd: "blocklist",
-        desc: "fetches list of blocked numbers",
-        fromMe: true,
-        type: 'user',
-}, async (m, text) => {
-  try {
-    const num = await m.client.fetchBlocklist();
-    if (!num?.length) return await m.send("_No blocked users found!_");
-    const blockList = `_*❏ Block List ❏*_\n\n${num.map(n => `➟ +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
-    return await m.send(blockList);
-  } catch (e) {
-    console.log("cmd error", e)
-    return await m.sendErr(e)
-  }
-})
 
+bluebot({
+    cmd: "blocklist/blocked",
+    desc: "fetches list of blocked numbers",
+    fromMe: true,
+    type: 'user',
+}, async (m, text) => {
+    try {
+        const num = await m.client.fetchBlocklist();
+        if (!num?.length) {
+            return await m.send("_No blocked users found!_");
+        }
+
+        const blockList =
+`╭───❖ 🚫 Blocked Users ❖───╮
+│
+${num.map(n => `│ ➤ +${n.replace('@s.whatsapp.net', '')}`).join('\n')}
+│
+╰────────────────────────╯`;
+
+        return await m.send(blockList);
+    } catch (e) {
+        console.log("cmd error", e);
+        return await m.sendErr(e);
+    }
+});
 bluebot({
         cmd: "setname",
         desc: "set profile name",
@@ -541,7 +550,7 @@ bluebot({
 })
 
 bluebot({
-  cmd: "mute-user",
+  cmd: "mute",
   desc: "mute a user or a sticker",
   fromMe: true,
   type: "bot",
@@ -549,7 +558,7 @@ bluebot({
   adminOnly: true,
 }, async (m, text) => {
   var botAd = await isBotAdmin(m)
-  if (!botAd) return await m.send("_*✘Bot Needs To Be Admin!*_")
+  if (!botAd) return await m.send("_*⚠️ Bot Requires Admin Privileges!*_")
 
   var _b = await getData("blacklisted") || {}
   if (!_b[m.chat]) _b[m.chat] = { users: [], stk: [] }
@@ -577,7 +586,7 @@ bluebot({
 
 
 bluebot({
-  cmd: "unmute-user",
+  cmd: "unmute",
   desc: "unmute a user or sticker",
   fromMe: true,
   type: "bot",
@@ -585,7 +594,7 @@ bluebot({
   adminOnly: true,
 }, async (m, text) => {
   var botAd = await isBotAdmin(m)
-  if (!botAd) return await m.send("_*✘Bot Needs To Be Admin!*_")
+  if (!botAd) return await m.send("_*⚠️ Bot Requires Admin Privileges!*_")
 
   var _b = await getData("blacklisted") || {}
   if (!_b[m.chat]) return await m.send("_no one muted here_")
@@ -593,7 +602,7 @@ bluebot({
   let bl = _b[m.chat]
 
   if (text.includes("-s")) {
-    if (!m.quoted.sticker) return await m.send("_reply to the sticker to unmute_")
+    if (!m.quoted.sticker) return await m.send("*_reply to the sticker to unmute baka..._*")
     var hash = m.quoted.fileSha256 ? Buffer.from(m.quoted.fileSha256).toString('hex') : null
     if (!bl.stk.includes(hash)) return await m.send("_sticker is not muted_")
     bl.stk = bl.stk.filter(h => h !== hash)
@@ -608,7 +617,7 @@ bluebot({
   if (!bl.users.includes(user)) return await m.send("_User is not muted_")
   bl.users = bl.users.filter(u => u !== user)
   await storeData("blacklisted", _b)
-  return await m.send(`@${user.split("@")[0]} has been unmuted`, { mentions: [user] })
+  return await m.send(`_*@${user.split("@")[0]} has been unmute you can't text baka...*_`, { mentions: [user] })
 })
 
 
