@@ -141,7 +141,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 <div align="center">
 
-### Developed with ❤️ by [Vhadau2011](https://github.com/Vhadau2011)
+### Developed with ❤️ by [Vhadau2011](https://github.com/MTE2011)
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=00BFFF&height=100&section=footer" width="100%" />
 
