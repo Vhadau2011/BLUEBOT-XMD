@@ -123,10 +123,94 @@ async function startBot() {
             console.log(`Mode     : ${config.MODE}`);
             console.log("-----------------------------\n");
 
-            const ownerJid = `${config.OWNER_NUMBER.replace(/[^0-9]/g, "")}@s.whatsapp.net`;
-            sock.sendMessage(ownerJid, {
-                text: `🚀 *BLUEBOT-XMD bot connected*\n\nOwner: ${config.OWNER_NAME}\nMode: ${config.MODE}\n\n_System Status: Online_`
-            }).catch(err => console.error("Failed to send connection message:", err));
+            // Custom Connection Success Logic
+            const sendSuccessMessage = async () => {
+                try {
+                    const ownerJid = `${config.OWNER_NUMBER.replace(/[^0-9]/g, "")}@s.whatsapp.net`;
+                    
+                    // Calculate stats
+                    const commandsPath = path.join(__dirname, "commands");
+                    let cmdCount = 0;
+                    const countCmds = (dir) => {
+                        if (!fs.existsSync(dir)) return;
+                        const items = fs.readdirSync(dir);
+                        for (const item of items) {
+                            const itemPath = path.join(dir, item);
+                            if (fs.statSync(itemPath).isDirectory()) {
+                                countCmds(itemPath);
+                            } else if (item.endsWith(".js")) {
+                                try {
+                                    const exported = require(itemPath);
+                                    const cmds = Array.isArray(exported) ? exported : (exported && typeof exported === 'object' ? Object.values(exported) : []);
+                                    const finalCmds = Array.isArray(cmds[0]) ? cmds[0] : cmds;
+                                    cmdCount += finalCmds.length;
+                                } catch (e) {}
+                            }
+                        }
+                    };
+                    countCmds(commandsPath);
+
+                    // Get session file size
+                    let sessionSize = "0 KB";
+                    if (fs.existsSync(config.SESSION_ID)) {
+                        const getDirSize = (dir) => {
+                            const files = fs.readdirSync(dir);
+                            let size = 0;
+                            for (const file of files) {
+                                const filePath = path.join(dir, file);
+                                const stats = fs.statSync(filePath);
+                                if (stats.isDirectory()) size += getDirSize(filePath);
+                                else size += stats.size;
+                            }
+                            return size;
+                        };
+                        const bytes = getDirSize(config.SESSION_ID);
+                        sessionSize = (bytes / 1024).toFixed(2) + " KB";
+                    }
+
+                    const successMsg = `┏━━━━━━❖❖❖❖
+┃ *BLUEBOT-XMD Connection Successful!* ✅
+┗━━━━━━❖❖❖❖
+
+❖━━━━━━━━❖━━━━━━━━━❖
+> *Join Our Channel*
+https://whatsapp.com/channel/0029Vb7L3423wtb3fHmyKq2F
+❖━━━━━━━━━━━━━━━━━━❖
+Repo: https://github.com/Vhadau2011/BLUEBOT-XMD 
+
+Contact: +27744332007 
+❖━━━━━━━━❖━━━━━━━━━❖
+
+Session Files: ${cmdCount} commands uploaded
+Total Size: ${sessionSize} 
+
+Use your Session ID Above to Deploy your Bot.
+Don't Forget To Give Star⭐ To My Repo`;
+
+                    await sock.sendMessage(ownerJid, { text: successMsg });
+
+                    // Send session file if requested (sending creds.json as the session)
+                    const credsPath = path.join(config.SESSION_ID, "creds.json");
+                    if (fs.existsSync(credsPath)) {
+                        await sock.sendMessage(ownerJid, { 
+                            document: fs.readFileSync(credsPath),
+                            fileName: "creds.json",
+                            mimetype: "application/json",
+                            caption: "✨ *Here is your session file (creds.json)*\nKeep this safe and do not share it with anyone!"
+                        });
+                    }
+
+                    // Auto-follow channel logic
+                    await sock.newsletterFollow("0029Vb7L3423wtb3fHmyKq2F").catch(() => {
+                        console.log("Failed to auto-follow channel (might be already following or restricted)");
+                    });
+
+                } catch (err) {
+                    console.error("Failed to send connection success details:", err);
+                }
+            };
+
+            sendSuccessMessage();
         }
     });
 
