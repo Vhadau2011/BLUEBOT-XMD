@@ -2,25 +2,36 @@ const { isAdmin, isMod, isOwner, isBanned } = require("./database/handlers/userH
 const config = require("./config");
 const fs = require("fs");
 const crypto = require("crypto");
+const { execSync } = require("child_process");
 
-// ANTI-EDIT PROTECTION
-// This code ensures that any modification to this file will shut down the bot.
-// Hardcoded checksum of the "pure" version of this file
-const PURE_CHECKSUM = "682a96eb8d08e160b88ac6320f9742e8866503a16d0a2215607ec69c2be1fcba"; 
+// ANTI-EDIT PROTECTION (SELF-HEALING)
+// This code ensures that any modification to this file will be automatically reverted.
+const PURE_CHECKSUM = "597e68e51d28d61d4dd6ec2e977a3a01c3aa1fdd70d05b39da184b6bc4919418"; 
 
 function verifyIntegrity() {
-    // We normalize the file content by removing all whitespace and line endings 
-    // to prevent the check from failing due to different hosting environments (LF vs CRLF)
-    const content = fs.readFileSync(__filename, "utf8");
-    const normalizedContent = content.replace(/\s+/g, "");
-    const hash = crypto.createHash("sha256").update(normalizedContent).digest("hex");
-    
-    if (PURE_CHECKSUM === "ANTI_EDIT_STUB") {
-        console.log(`[INTEGRITY] New normalized hash: ${hash}`);
-    } else if (hash !== PURE_CHECKSUM) {
-        console.error("🛑 [SECURITY] UNAUTHORIZED EDIT DETECTED IN blue.js!");
-        console.error("🛑 The bot will now shut down to prevent instability.");
-        process.exit(1);
+    try {
+        const content = fs.readFileSync(__filename, "utf8");
+        const normalizedContent = content.replace(/\s+/g, "");
+        const hash = crypto.createHash("sha256").update(normalizedContent).digest("hex");
+        
+        if (PURE_CHECKSUM === "ANTI_EDIT_STUB") {
+            console.log(`[INTEGRITY] New normalized hash: ${hash}`);
+            return;
+        }
+
+        if (hash !== PURE_CHECKSUM) {
+            console.log("⚠️ [SECURITY] UNAUTHORIZED EDIT DETECTED IN blue.js!");
+            console.log("🔄 [SELF-HEALING] Restoring original file from repository...");
+            
+            // Revert changes using git
+            execSync("git checkout blue.js");
+            
+            console.log("✅ [SELF-HEALING] File restored successfully. Please restart the bot.");
+            // We still exit to ensure the clean version is loaded on next start
+            process.exit(0);
+        }
+    } catch (err) {
+        console.error("Integrity check failed:", err.message);
     }
 }
 
@@ -48,7 +59,7 @@ blue.bot.isDeveloper = isDeveloper;
  * @param {object} anu - The update event data.
  */
 blue.bot.handleGroupParticipantsUpdate = async (sock, anu) => {
-    verifyIntegrity(); // Check integrity on events
+    verifyIntegrity(); 
     try {
         const { id, participants, action } = anu;
         
